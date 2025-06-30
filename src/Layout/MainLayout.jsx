@@ -8,7 +8,6 @@ function MainLayout() {
     <>
     <Navbar />
     <Outlet />
-    <Dialogs />
     <Footer />
     </>
   )
