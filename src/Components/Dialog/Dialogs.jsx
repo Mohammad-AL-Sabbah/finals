@@ -14,38 +14,43 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ShareIcon from '@mui/icons-material/Share';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import { useTheme } from '@mui/material/styles';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import { useTheme } from '@mui/material/styles';
+
 export default function ProductDialog({ open, handleClose, product }) {
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down('xs')); // <600px
   const isSm = useMediaQuery(theme.breakpoints.down('sm')); // <900px
   const isMd = useMediaQuery(theme.breakpoints.down('md')); // <1200px
-  const isLgUp = useMediaQuery(theme.breakpoints.up('lg')); // >=1200px
-
-  // ميديا كويري خاص بـ Nest Hub (تقريباً شاشة 7 بوصة)
   const isNestHub = useMediaQuery('(max-height:600px) and (max-width:1024px)');
 
   const [userRating, setUserRating] = useState(product?.rating || 0);
 
   if (!product) return null;
 
-  // تحديد اتجاه المحتوى (صورة يمين على الشاشات الكبيرة، عمودي على الصغيرة)
+  // اتجاه المحتوى: عمودي (column) تحت 1200، صف مع صورة يمين فوقها
   const flexDirection = isMd ? 'column' : 'row-reverse';
 
   return (
     <Dialog
       open={open}
       onClose={handleClose}
-      maxWidth="md"
+      maxWidth={false}  // نلغي maxWidth الافتراضي عشان نتحكم بالحجم يدويًا
       fullWidth
       PaperProps={{
         sx: {
-          maxWidth: '800px',
-          minHeight: isNestHub ? '60vh' : isXs ? '70vh' : '80vh',
-          width: isXs ? '95%' : '90%',
-          overflow: 'hidden',
+          maxWidth: 900,
+          minHeight: '50vh',
+          width: '90%',
+          margin: { xs: 2, sm: 3, md: 4 }, // مارجن متغير حسب حجم الشاشة
           borderRadius: 2,
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+          maxHeight: 'calc(100% - 64px)',
+          boxShadow: 'var(--MuiPaper-elevation24)',
+          backgroundColor: '#fff',
+          color: 'rgba(0, 0, 0, 0.87)',
         },
       }}
     >
@@ -55,16 +60,15 @@ export default function ProductDialog({ open, handleClose, product }) {
         sx={{
           position: 'absolute',
           top: 10,
+          left: 10,
           border: '1px solid',
           bgcolor: 'background.paper',
           borderRadius: '50%',
-          left: 10,
           zIndex: 1,
           transition: '0.3s',
           '&:hover': {
             transform: 'rotate(90deg)',
             color: 'error.main',
-            
           },
         }}
       >
@@ -77,16 +81,16 @@ export default function ProductDialog({ open, handleClose, product }) {
           p: 0,
           display: 'flex',
           flexDirection,
-          height: '100%',
-          maxHeight: isNestHub ? 'calc(60vh - 48px)' : 'auto', // ناقص ارتفاع الهيدر
-          overflowY: isNestHub ? 'auto' : 'visible',
+          maxHeight: isNestHub ? '60vh' : isXs ? '70vh' : '80vh',
+          overflowY: 'auto',
+          height: 'auto',
         }}
       >
         {/* الصورة */}
         <Box
           sx={{
             flex: 1,
-            height: isNestHub || isXs || isSm ? 180 : isMd ? 300 : 'auto',
+            maxHeight: isNestHub || isXs || isSm ? 180 : isMd ? 300 : 'auto',
             overflow: 'hidden',
             display: 'flex',
             alignItems: 'center',
@@ -97,8 +101,8 @@ export default function ProductDialog({ open, handleClose, product }) {
             src={product.mainImg}
             alt={product.name}
             style={{
-              width: '100%',
-              height: '100%',
+              maxWidth: '100%',
+              maxHeight: '100%',
               objectFit: 'contain',
               borderRadius: 0,
               display: 'block',
@@ -113,26 +117,32 @@ export default function ProductDialog({ open, handleClose, product }) {
             p: isXs ? 2 : 3,
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'space-between',
-            height: isLgUp ? '100%' : 'auto',
+            justifyContent: 'flex-start',
+            maxHeight: isNestHub ? 'calc(60vh - 48px)' : '70vh',
+            overflowY: 'auto',
+            height: 'auto',
           }}
         >
-          <Box sx={{marginTop:'30px'}}>
-            <Typography variant="h4" fontWeight="bold" mb={1} mt={3}>
+          <Box sx={{ mt: '18px' }}>
+            <Typography variant="h5" fontWeight="bold" mb={1} mt={1}>
               {product.name}
             </Typography>
 
-        
-
-            <Typography sx={{ display: 'flex', alignItems: 'center' }}  fontSize="14px" color="text.secondary" mb={2}>
-<span style={{ color: '#d4a373', marginRight: '4px' }}> Shipping is calculated at checkou</span>
-<LocalShippingIcon style={{ color: '#d4a373', marginRight: '4px' }} /> 
+            <Typography
+              sx={{ display: 'flex', alignItems: 'center' }}
+              fontSize="14px"
+              color="text.secondary"
+              mb={2}
+            >
+              <span style={{ color: '#d4a373', marginRight: '4px' }}>
+                Shipping is calculated at checkout
+              </span>
+              <LocalShippingIcon style={{ color: '#d4a373', marginRight: '4px' }} />
             </Typography>
 
             <Typography variant="body2" mb={2}>
               {product.description}
             </Typography>
-
           </Box>
 
           {/* الكمية */}
@@ -156,29 +166,27 @@ export default function ProductDialog({ open, handleClose, product }) {
               <RemoveIcon />
             </IconButton>
           </Box>
-        
-         
 
-            
-            {/* التقييم قابل للتغيير من المستخدم */}
-            <Box sx={{ display: 'flex', alignItems: 'center',mt:'20px',mb:'10px' }}>
+  <Box mt={2}>
+            <Typography fontSize="14px">in stock: {product.quantity} product</Typography>
+          </Box>
+          {/* التقييم */}
 
+          <Box sx={{ display: 'flex', alignItems: 'center', mt: '20px', mb: '10px' }}>
             <span>Rate this product</span>
-           <Rating
+            <Rating
               value={userRating}
               precision={0.5}
               onChange={(event, newValue) => {
                 setUserRating(newValue);
-                
               }}
               sx={{ ml: 1 }}
             />
-            </Box>
-          
-                 <Typography variant="h5" fontWeight="bold" color="black" mb={1}>
-          Price is : {product.price}$
-            </Typography>
+          </Box>
 
+          <Typography variant="h5" fontWeight="bold" color="black" mb={1}>
+            Price is : {product.price}$
+          </Typography>
 
           {/* الأزرار */}
           <Box mt={3} display="flex" gap={2} flexWrap="wrap">
@@ -186,7 +194,7 @@ export default function ProductDialog({ open, handleClose, product }) {
               variant="contained"
               sx={{ flex: 1, bgcolor: '#d4a373', '&:hover': { bgcolor: '#c58f5f' } }}
             >
-             Add to Cart
+              Add to Cart
             </Button>
             <Button
               variant="contained"
@@ -196,9 +204,7 @@ export default function ProductDialog({ open, handleClose, product }) {
             </Button>
           </Box>
 
-          <Box mt={2}>
-            <Typography fontSize="14px">in stock: {product.quantity} product</Typography>
-          </Box>
+        
 
           {/* مشاركة */}
           <Box mt={2} display="flex" gap={1}>
