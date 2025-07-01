@@ -9,7 +9,12 @@ function Home() {
   return (
     <>
      {/* فش منتجات بتكفي شغال هيك للتجربة */}
-<Box sx={{ display: 'flex', justifyContent: 'center',alignItems: 'center',width:'90%',margin:'auto',flexWrap:'wrap'}}>
+<Box sx={{  display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '90%',
+    margin: 'auto',
+    flexWrap: 'wrap',}}>
  <Products />  
 <Products  />  
  <Products />  

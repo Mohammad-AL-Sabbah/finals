@@ -93,6 +93,7 @@ function Products() {
               background: '#fff',
               borderRadius: 3,
               textAlign: 'center',
+              margin: '10px 7px',
               position: 'relative',
               cursor: 'pointer',
               boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
