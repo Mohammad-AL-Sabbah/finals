@@ -3,10 +3,13 @@ import styles from './CheckOut.module.css';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { Button } from '@mui/material';
 import { useState } from 'react';
-import axios from 'axios';
-function CheckOut() {
-  const [paymentMethod, setPaymentMethod] = useState('visa');
 
+import axios from 'axios';
+
+function CheckOut() {
+    const title = document.getElementById('title');
+  title.innerHTML = 'Check Out';
+  const [paymentMethod, setPaymentMethod] = useState('visa');
  const handlePaymentChange = (event) => {
   setPaymentMethod(event.target.value);
   console.log(event.target.value);

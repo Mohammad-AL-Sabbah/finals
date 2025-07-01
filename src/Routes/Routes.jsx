@@ -3,6 +3,7 @@ import Home from '../Pages/Home/Home.jsx';
 import MainLayout from '../Layout/MainLayout.jsx';
 import Error from '../Pages/Error/Error.jsx';
 import CheckOut from '../Pages/CheckOut/CheckOut.jsx';
+import ProductsPage from './../Pages/ProductsPage/ProductsPage';
 
 const routes = createBrowserRouter([
     {
@@ -18,7 +19,11 @@ const routes = createBrowserRouter([
         path: '/checkout',
             element:
             <CheckOut />  
-        },
+        },{
+        path: '/ProductsPage/:id',
+            element:
+            <ProductsPage />
+        }
         ]
     }
 
