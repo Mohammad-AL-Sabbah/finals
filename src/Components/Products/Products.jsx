@@ -49,7 +49,8 @@ function Products() {
 
   const handleShare = (e, product) => {
     e.stopPropagation();
-    const url = `${window.location.origin}/product/${product.id}`;
+const url = `${window.location.origin}/ProductsPage/${product.id}`;
+    
     if (navigator.share) {
       navigator
         .share({
@@ -81,7 +82,7 @@ function Products() {
 
   return (
     <>
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 3 }}>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap',mt:3, justifyContent: 'center', gap: 3 }}>
         {products.map((product) => (
           <Card
             key={product.id}

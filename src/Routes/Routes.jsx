@@ -4,6 +4,8 @@ import MainLayout from '../Layout/MainLayout.jsx';
 import Error from '../Pages/Error/Error.jsx';
 import CheckOut from '../Pages/CheckOut/CheckOut.jsx';
 import ProductsPage from './../Pages/ProductsPage/ProductsPage';
+import Login from '../Pages/Login/Login';
+import Register from '../Pages/Register/Register';
 
 const routes = createBrowserRouter([
     {
@@ -23,7 +25,16 @@ const routes = createBrowserRouter([
         path: '/ProductsPage/:id',
             element:
             <ProductsPage />
+        },{
+        path: '/Login',
+            element:
+            <Login />
+        },{
+        path: '/Register',
+            element:
+            <Register />
         }
+        
         ]
     }
 

@@ -12,7 +12,8 @@ import MenuItem from '@mui/material/MenuItem';
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
+
 
 const pages = ['Register', 'Login', 'About US', 'Contact'];
 
@@ -81,7 +82,7 @@ function Navbar() {
   const rightPages = pages.slice(half);
 
   return (
-    <AppBar position="static" sx={{ mb: 4 }}>
+    <AppBar position="static" >
       <Container maxWidth="xl">
         <Toolbar disableGutters sx={{ justifyContent: 'space-between' }}>
           {/* Mobile: hamburger menu */}
@@ -118,9 +119,7 @@ function Navbar() {
             {pages.map((page) => (
               <MenuItem key={page} onClick={handleCloseNavMenu}>
                 <Typography textAlign="center">
-                  <Link to={`/${page}`}>{page}</Link>
-                 
-                  
+                  {page}                  
                 </Typography>
               </MenuItem>
             ))}
@@ -136,7 +135,9 @@ function Navbar() {
                 </a>
               </Box>
               {leftPages.map((page) => (
-                <Button key={page} onClick={handleCloseNavMenu} sx={{ color: 'white' }}>
+                <Button key={page} onClick={handleCloseNavMenu} sx={{ color: 'white' }} 
+                component={Link} 
+                to={`/${page}`}>
                   {page}
                 </Button>
               ))}
