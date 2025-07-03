@@ -6,16 +6,24 @@ import axios from 'axios'
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
 const {register, handleSubmit} = useForm();
+const navigate = useNavigate();
 
 const LoginUser = async (data) => {
+  try{
     const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/Account/Login`, data);
     localStorage.setItem('Usertoken', response.data.token);
-
+    console.log(response);
+    if(response.status == 200){
+navigate('/');
+  }
+}catch(error){
+  console.log(error + "error");
 }
-
+}
 
  const [showPassword, setShowPassword] = React.useState(false);
 

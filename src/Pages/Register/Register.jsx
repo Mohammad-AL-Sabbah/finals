@@ -6,13 +6,17 @@ import axios from 'axios'
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 function Register() {
 const {register, handleSubmit} = useForm();
+const navigate = useNavigate();
 
 const registerUser = async (data) => {
-    // eslint-disable-next-line no-unused-vars
     const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/Account/register`, data);
+    if(response.status == 200){
+        navigate('/login');
+    }
 }
 
 

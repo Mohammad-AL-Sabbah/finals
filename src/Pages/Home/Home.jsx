@@ -14,13 +14,16 @@ function Home() {
 <Box sx={{  display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    width: '90%',
+    width: '100%',
     margin: 'auto',
     flexWrap: 'wrap',}}>
  <Products />  
 <Products  />  
  <Products />  
  <Products />  
+  <Products />  
+ <Products />  
+
  <Products />  
   <Products />  
 
