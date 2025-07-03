@@ -90,7 +90,7 @@ const url = `${window.location.origin}/ProductsPage/${product.id}`;
             image src={product.mainImg}
             elevation={0}
             sx={{
-              maxWidth: 200,
+              maxWidth: 150,
               background: '#fff',
               borderRadius: 3,
               textAlign: 'center',
@@ -113,7 +113,7 @@ const url = `${window.location.origin}/ProductsPage/${product.id}`;
             <Box sx={{ borderRadius: 3, overflow: 'hidden', position: 'relative' }}>
               <CardMedia
                 component="img"
-                height="200"
+                height="150"
                 image={product.mainImg}
                 alt={product.description || product.name}
                 sx={{
@@ -229,7 +229,7 @@ const url = `${window.location.origin}/ProductsPage/${product.id}`;
                 {product.name}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                $US {product.price}
+                ${product.price}US
               </Typography>
             </CardContent>
           </Card>

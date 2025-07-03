@@ -1,6 +1,7 @@
 import React from 'react'
 import Products from '../../Components/Products/Products'
 import { Box } from '@mui/material'
+import Category from '../../Components/Category/Category';
 
 function Home() {
   const title = document.getElementById('title');
@@ -8,6 +9,7 @@ function Home() {
   
   return (
     <>
+    <Category />
      {/* فش منتجات بتكفي شغال هيك للتجربة */}
 <Box sx={{  display: 'flex',
     justifyContent: 'center',

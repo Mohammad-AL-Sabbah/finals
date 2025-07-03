@@ -19,7 +19,7 @@ import { Heart } from 'react-feather';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import LoginIcon from '@mui/icons-material/Login';
 
 export default function ProductDialog({ open, handleClose, product }) {
   const theme = useTheme();
@@ -42,24 +42,45 @@ export default function ProductDialog({ open, handleClose, product }) {
     }
   };
 
-  const handleBuyNow = () => {
-    const token = localStorage.getItem('UserToken');
-    if (!token) {
-      toast.error('Please login first', {
+const handleBuyNow = () => {
+  const token = localStorage.getItem('Usertoken');
+  if (!token) {
+    toast.error(
+      <div style={{ textAlign: 'center' }}>
+        <div style={{ marginBottom: '0.5rem' }}>Please login first</div>
+        <Button
+          color="black"
+          size="small"
+          startIcon={<LoginIcon />}
+          onClick={() => {
+            toast.dismiss();
+            Navigate('/login');
+          }}
+          sx={{
+            textTransform: 'none',
+            fontWeight: 'bold',
+            fontSize: '0.8rem',
+          }}
+        >
+          press to Login
+        </Button>
+      </div>,
+      {
         position: "top-center",
-        autoClose: 3000,
+        autoClose: 4000, 
         hideProgressBar: false,
-        closeOnClick: false,
+        closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        progress: undefined,
-        theme: "colored",
+        theme: "light",
         transition: Bounce,
-      });
-    } else {
-      Navigate('/checkout');
-    }
-  };
+      }
+    );
+  } else {
+    Navigate('/checkout');
+  }
+};
+
 
   const [userRating, setUserRating] = useState(product?.rating || 0);
   const [likedProducts, setLikedProducts] = useState([]);
@@ -69,7 +90,6 @@ export default function ProductDialog({ open, handleClose, product }) {
     );
   };
 
-  // === بداية كود العدسة المكبرة ===
   const imgRef = useRef(null);
   const [lensPos, setLensPos] = useState({ x: 0, y: 0, visible: false });
 
@@ -99,7 +119,6 @@ export default function ProductDialog({ open, handleClose, product }) {
   if (!product) return null;
 
   const flexDirection = isMd ? 'column' : 'row-reverse';
-
 
   return (
     <>
@@ -156,7 +175,6 @@ export default function ProductDialog({ open, handleClose, product }) {
             height: 'auto',
           }}
         >
-          {/* الصورة مع العدسة */}
           <Box
             sx={{
               flex: 1,
@@ -207,7 +225,6 @@ export default function ProductDialog({ open, handleClose, product }) {
             )}
           </Box>
 
-          {/* التفاصيل */}
           <Box
             sx={{
               flex: 1,
@@ -222,7 +239,7 @@ export default function ProductDialog({ open, handleClose, product }) {
           >
             <Box sx={{ mt: '18px', pt: '10px' }}>
               <Typography variant="h5" fontWeight="bold" mb={1} mt={1}>
-                {product.name} 
+                {product.name}
               </Typography>
 
               <Typography
@@ -239,13 +256,10 @@ export default function ProductDialog({ open, handleClose, product }) {
 
               <Typography variant="body2" mb={2}>
                 {product.description} <br />
-             <h5>You can Zoom on the product </h5> 
-
-
+                <h5>You can Zoom on the product </h5>
               </Typography>
             </Box>
 
-            {/* الكمية */}
             <Box
               sx={{
                 width: 'fit-content',
@@ -257,20 +271,15 @@ export default function ProductDialog({ open, handleClose, product }) {
               alignItems="center"
               gap={1}
             >
-              <IconButton>
-                <AddIcon />
-              </IconButton>
+              <IconButton><AddIcon /></IconButton>
               <Typography>1</Typography>
-              <IconButton>
-                <RemoveIcon />
-              </IconButton>
+              <IconButton><RemoveIcon /></IconButton>
             </Box>
 
             <Box mt={2}>
               <Typography fontSize="14px">in stock: {product.quantity} product</Typography>
             </Box>
 
-            {/* التقييم */}
             <Box sx={{ display: 'flex', alignItems: 'center', mt: '10px', mb: '10px' }}>
               <span>Rate this product</span>
               <Rating
@@ -287,7 +296,6 @@ export default function ProductDialog({ open, handleClose, product }) {
               Price is : {product.price}$
             </Typography>
 
-            {/* الأزرار */}
             <Box mt={3} display="flex" gap={2} flexWrap="wrap">
               <Button
                 variant="contained"
@@ -304,7 +312,6 @@ export default function ProductDialog({ open, handleClose, product }) {
               </Button>
             </Box>
 
-            {/* مشاركة */}
             <Box mt={2} display="flex" gap={1}>
               <IconButton onClick={() => handleLike(product.id)}>
                 <Heart
