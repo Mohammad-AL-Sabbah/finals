@@ -14,7 +14,6 @@ import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import { Link } from 'react-router-dom';
 
-
 const pages = ['Register', 'Login', 'About US', 'Contact'];
 
 const Search = styled('div')(({ theme }) => ({
@@ -52,7 +51,7 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'center',
   backgroundColor: 'white',
-  color: 'black'
+  color: 'black',
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
@@ -81,8 +80,11 @@ function Navbar() {
   const leftPages = pages.slice(0, half);
   const rightPages = pages.slice(half);
 
+  // لتحويل النص إلى مسار URL مهيأ
+  const toPath = (page) => '/' + page.toLowerCase().replace(/\s+/g, '-');
+
   return (
-    <AppBar position="static" >
+    <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters sx={{ justifyContent: 'space-between' }}>
           {/* Mobile: hamburger menu */}
@@ -94,9 +96,9 @@ function Navbar() {
 
           {/* Mobile: logo on right */}
           <Box sx={{ display: { xs: 'flex', md: 'none' }, flexGrow: 1, justifyContent: 'flex-end' }}>
-            <a href="/" style={{ textDecoration: 'none' }}>
+            <Link to="/" style={{ textDecoration: 'none' }}>
               <p style={{ margin: 0, fontSize: '20px', fontWeight: 'bold', color: 'white' }}>Stors</p>
-            </a>
+            </Link>
           </Box>
 
           {/* Mobile menu */}
@@ -117,10 +119,13 @@ function Navbar() {
               </SearchInMenu>
             </MenuItem>
             {pages.map((page) => (
-              <MenuItem key={page} onClick={handleCloseNavMenu}>
-                <Typography textAlign="center">
-                  {page}                  
-                </Typography>
+              <MenuItem
+                key={page}
+                onClick={handleCloseNavMenu}
+                component={Link}          // الربط بمسار react-router
+                to={toPath(page)}
+              >
+                <Typography textAlign="center">{page}</Typography>
               </MenuItem>
             ))}
           </Menu>
@@ -130,14 +135,18 @@ function Navbar() {
             {/* Left: Logo + Left Pages */}
             <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
               <Box sx={{ mr: 2 }}>
-                <a href="/" style={{ textDecoration: 'none' }}>
+                <Link to="/" style={{ textDecoration: 'none' }}>
                   <p style={{ margin: 0, fontSize: '20px', fontWeight: 'bold', color: 'white' }}>Stors</p>
-                </a>
+                </Link>
               </Box>
               {leftPages.map((page) => (
-                <Button key={page} onClick={handleCloseNavMenu} sx={{ color: 'white' }} 
-                component={Link} 
-                to={`/${page}`}>
+                <Button
+                  key={page}
+                  onClick={handleCloseNavMenu}
+                  sx={{ color: 'white' }}
+                  component={Link}
+                  to={toPath(page)}
+                >
                   {page}
                 </Button>
               ))}
@@ -156,7 +165,13 @@ function Navbar() {
             {/* Right: Remaining Pages */}
             <Box sx={{ display: 'flex', gap: 1 }}>
               {rightPages.map((page) => (
-                <Button key={page} onClick={handleCloseNavMenu} sx={{ color: 'white' }}>
+                <Button
+                  key={page}
+                  onClick={handleCloseNavMenu}
+                  sx={{ color: 'white' }}
+                  component={Link}
+                  to={toPath(page)}
+                >
                   {page}
                 </Button>
               ))}
