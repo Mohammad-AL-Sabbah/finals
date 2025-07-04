@@ -2,77 +2,32 @@ import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
 import axios from "axios";
+import { FaChevronRight, FaChevronLeft } from "react-icons/fa";
 
-function NextArrow(props) {
-  const { style, onClick } = props;
+function ArrowButton({ direction, onClick }) {
+  const isNext = direction === "next";
   return (
     <div
+      onClick={onClick}
       style={{
-        ...style,
+        position: "absolute",
+        top: "50%",
+        [isNext ? "right" : "left"]: "10px",
+        transform: "translateY(-50%)",
+        width: "40px",
+        height: "40px",
+        background: "rgba(43, 2, 252, 0.7)",
+        borderRadius: "50%",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "rgba(33, 150, 243, 0.8)",
-        borderRadius: "50%",
-        width: 40,
-        height: 40,
-        right: -20,
-        zIndex: 5,
-        boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
+        color: "#fff",
         cursor: "pointer",
-        color: "white",
-        fontSize: 25,
-        position: "absolute",
-        top: "45%",
-        transition: "background 0.3s",
+        zIndex: 1000,
       }}
-      onClick={onClick}
-      onMouseEnter={(e) =>
-        (e.currentTarget.style.background = "rgba(33, 150, 243, 1)")
-      }
-      onMouseLeave={(e) =>
-        (e.currentTarget.style.background = "rgba(33, 150, 243, 0.8)")
-      }
     >
-      &#9654;
-    </div>
-  );
-}
-
-function PrevArrow(props) {
-  const { style, onClick } = props;
-  return (
-    <div
-      style={{
-        ...style,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "rgba(33, 150, 243, 0.8)",
-        borderRadius: "50%",
-        width: 40,
-        height: 40,
-        left: -20,
-        zIndex: 5,
-        boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
-        cursor: "pointer",
-        color: "white",
-        fontSize: 25,
-        position: "absolute",
-        top: "45%",
-        transition: "background 0.3s",
-      }}
-      onClick={onClick}
-      onMouseEnter={(e) =>
-        (e.currentTarget.style.background = "rgba(33, 150, 243, 1)")
-      }
-      onMouseLeave={(e) =>
-        (e.currentTarget.style.background = "rgba(33, 150, 243, 0.8)")
-      }
-    >
-      &#9664;
+      {isNext ? <FaChevronRight size={20} /> : <FaChevronLeft size={20} />} 
     </div>
   );
 }
@@ -99,199 +54,120 @@ function Category() {
   }, []);
 
   const settings = {
-    dots: true,
+    rtl: true,
+    dots: false,
     infinite: false,
     speed: 500,
-    slidesToShow: 4,
-    slidesToScroll: 4,
-    initialSlide: 0,
+    slidesToShow: 6,
+    slidesToScroll: 2,
     arrows: true,
-    nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />,
+    nextArrow: <ArrowButton direction="next" />,
+    prevArrow: <ArrowButton direction="prev" />,
     responsive: [
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: 3,
-          slidesToScroll: 3,
-          infinite: true,
-          dots: true,
+          slidesToShow: 4,
+          slidesToScroll: 2,
         },
       },
       {
         breakpoint: 768,
         settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+        },
+      },
+      {
+        breakpoint: 480,
+        settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
-          arrows: false,
-          dots: true,
         },
       },
     ],
-    appendDots: (dots) => (
-      <div style={{ marginTop: "20px" }}>
-        <ul
-          style={{
-            margin: 0,
-            padding: 0,
-            display: "flex",
-            justifyContent: "center",
-            listStyle: "none",
-          }}
-        >
-          {dots}
-        </ul>
-      </div>
-    ),
-    customPaging: (i) => (
-      <div
-        style={{
-          width: "14px",
-          height: "14px",
-          borderRadius: "50%",
-          backgroundColor: "#2196f3",
-          opacity: 0.5,
-          cursor: "pointer",
-          transition: "opacity 0.3s",
-        }}
-      />
-    ),
   };
-
-  if (loading) {
-    return (
-      <div
-        style={{
-          width: "90%",
-          maxWidth: "1200px",
-          margin: "auto",
-          marginTop: "2rem",
-          marginBottom: "2rem",
-          textAlign: "center",
-          fontSize: "1.2rem",
-          color: "#666",
-          minHeight: "200px",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        جاري التحميل...
-      </div>
-    );
-  }
 
   return (
     <div
-      className="slider-container"
       style={{
-        width: "90%",
-        maxWidth: "1200px",
+        width: "95%",
         margin: "auto",
         marginTop: "2rem",
-        marginBottom: "2rem",
+        direction: "rtl",
       }}
     >
-      <Slider {...settings}>
-        {categories.map((item) => (
-          <div key={item.id} className="category-slide">
-            <div
-              style={{
-                borderRadius: "1rem",
-                boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
-                padding: "2rem",
-                textAlign: "center",
-                width: "100%",
-                maxWidth: "250px",
-                height: "200px",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                transition: "transform 0.3s",
-                cursor: "pointer",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-              onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-            >
+      <h2
+        style={{
+          fontSize: "1.5rem",
+          fontWeight: "bold",
+          marginBottom: "1rem",
+          borderBottom: "2px solid #2196f3",
+          display: "inline-block",
+          paddingBottom: "1.3rem",
+        }}
+      >
+      Shop by categories
+      </h2>
+
+      {loading ? (
+        <p style={{ textAlign: "center" }}>جاري التحميل...</p>
+      ) : (
+        <Slider {...settings}>
+          {categories.map((item, index) => (
+            <div key={index} style={{ padding: "0 10px" }}>
               <div
                 style={{
-                  width: "80px",
-                  height: "80px",
-                  backgroundColor: "#eee",
-                  borderRadius: "50%",
-                  marginBottom: "1rem",
+                  textAlign: "center",
+                  padding: "1rem",
+                  borderRadius: "12px",
+                  backgroundColor: "#fff",
+                  transition: "transform 0.3s",
+                  cursor: "pointer", 
                 }}
-              ></div>
-              <h3
-                style={{
-                  fontSize: "1.1rem",
-                  color: "#333",
-                  marginBottom: "0.5rem",
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.transform = "scale(1.05)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.transform = "scale(1)")
+                }
               >
-                {item.name}
-              </h3>
-              <p
-                style={{
-                  fontSize: "0.9rem",
-                  color: "#777",
-                  overflow: "hidden",
-                  display: "-webkit-box",
-                  WebkitLineClamp: 3,
-                  WebkitBoxOrient: "vertical",
-                }}
-              >
-                {item.description}
-              </p>
+                <div
+                  style={{
+                    width: "100px",
+                    height: "100px",
+                    margin: "auto",
+                    marginBottom: "1rem",
+                    borderRadius: "50%",
+                    backgroundColor: "#eee",
+                    backgroundImage: `url(${item.image})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
+                />
+                <strong
+                  style={{
+                    display: "block",
+                    fontSize: "1rem",
+                    color: "#333",
+                    marginBottom: "0.3rem",
+                  }}
+                >
+                  {item.name}
+                </strong>
+                <p
+                  style={{
+                    fontSize: "0.8rem",
+                    color: "#777",
+                  }}
+                >
+                  {item.description}
+                </p>
+              </div>
             </div>
-          </div>
-        ))}
-      </Slider>
-
-      <style>
-        {`
-        .category-slide {
-    display: flex !important
-;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 10px !important;
-}
-          .slick-dots li button {
-            background: #2196f3;
-            border-radius: 50%;
-            width: 14px;
-            height: 14px;
-            opacity: 0.5;
-            transition: opacity 0.3s;
-          }
-            .slick-dots {
-    position: absolute;
-    bottom: -50px !important;
-    display: block;
-    width: 100%;
-    padding: 0;
-    margin: 0;
-    list-style: none;
-    text-align: center;
-}
-          .slick-dots li.slick-active button {
-            opacity: 1;
-          }
-          .slick-dots li button:hover {
-            opacity: 1;
-          }
-          .category-slide {
-            display: flex !important;
-            justify-content: center;
-            align-items: center;
-          }
-        `}
-      </style>
+          ))}
+        </Slider>
+      )}
     </div>
   );
 }

@@ -256,7 +256,7 @@ const handleBuyNow = () => {
 
               <Typography variant="body2" mb={2}>
                 {product.description} <br />
-                <h5>You can Zoom on the product </h5>
+                <p style={{ color: '#d4a373', fontSize: '12px' }}>You can Zoom on the product </p>
               </Typography>
             </Box>
 
@@ -280,7 +280,7 @@ const handleBuyNow = () => {
               <Typography fontSize="14px">in stock: {product.quantity} product</Typography>
             </Box>
 
-            <Box sx={{ display: 'flex', alignItems: 'center', mt: '10px', mb: '10px' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: '10px' }}>
               <span>Rate this product</span>
               <Rating
                 value={userRating}
@@ -312,7 +312,7 @@ const handleBuyNow = () => {
               </Button>
             </Box>
 
-            <Box mt={2} display="flex" gap={1}>
+            <Box  display="flex" gap={1}>
               <IconButton onClick={() => handleLike(product.id)}>
                 <Heart
                   color={likedProducts.includes(product.id) ? 'red' : 'gray'}

@@ -18,8 +18,8 @@ export default function ProductPage() {
   const { id } = useParams();
   const [data, setData] = useState({});
   const [quantity, setQuantity] = useState(1);
-  const [shipping, setShipping] = useState('10'); // القيمة الافتراضية لشحن 10$
-
+  const [shipping, setShipping] = useState('10');
+  
   const imageIds = [1015, 1016, 1020, 1021, 1024];
   const [mainImageId, setMainImageId] = useState(imageIds[0]);
 
@@ -28,6 +28,15 @@ export default function ProductPage() {
 
   const lensSize = 150;
   const zoom = 2;
+
+  const colorOptions = [
+    { name: 'White', hex: '#FFFFFF' },
+    { name: 'Black', hex: '#000000' },
+    { name: 'Red', hex: '#D94C3D' },
+    { name: 'Gold', hex: '#F4A400' },
+    { name: 'Blue', hex: '#3B28D8' },
+  ];
+  const [selectedColor, setSelectedColor] = useState(colorOptions[0]);
 
   const handleMouseMove = (e) => {
     const img = imgRef.current;
@@ -53,18 +62,18 @@ export default function ProductPage() {
     try {
       const { data } = await axios.get(`${import.meta.env.VITE_BASE_URL}/products/${id}`);
       setData(data);
-      if(data.mainImageId) setMainImageId(data.mainImageId);
+      if (data.mainImageId) setMainImageId(data.mainImageId);
     } catch (error) {
       console.error('Error fetching product:', error);
     }
   };
 
-  const title = document.getElementById('title');
-  if(title) title.innerHTML = data.name;
-
   useEffect(() => {
     getByid();
   }, [id]);
+
+  const title = document.getElementById('title');
+  if (title) title.innerHTML = data.name;
 
   const handleShippingChange = (event) => {
     setShipping(event.target.value);
@@ -73,7 +82,7 @@ export default function ProductPage() {
   return (
     <Box sx={{ p: 4, maxWidth: 1200, mx: 'auto', direction: 'rtl', mt: 8 }}>
       <Box sx={{ display: 'flex', flexDirection: { xs: 'column', lg: 'row' }, gap: 4 }}>
-        {/* الصور */}
+       
         <Box sx={{ display: 'flex', flexDirection: 'row', flex: 1, gap: 2 }}>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
             {imageIds.map((id) => (
@@ -154,6 +163,28 @@ export default function ProductPage() {
             quantity : {data.quantity} Products
           </Typography>
 
+          {/* خيارات اللون */}
+          <Typography variant="subtitle1" sx={{ mt: 4, mb: 1 }}>
+            :Avilable Colors
+          </Typography>
+          <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+            {colorOptions.map((color) => (
+              <Box
+                key={color.name}
+                onClick={() => setSelectedColor(color)}
+                sx={{
+                  width: 22,
+                  height:22,
+                  borderRadius: '50%',
+                  backgroundColor: color.hex,
+                  cursor: 'pointer',
+                  border: selectedColor.name === color.name ? '3px solid #2196f3' : '2px solid #ccc',
+                  transition: '0.2s ease-in-out'
+                }}
+              />
+            ))}
+          </Box>
+
           <RadioGroup value={shipping} onChange={handleShippingChange}>
             <FormControlLabel
               value="10"
@@ -167,12 +198,7 @@ export default function ProductPage() {
             />
           </RadioGroup>
 
-          <TextField
-            label="ملاحظات خاصة للبائع"
-            variant="outlined"
-            fullWidth
-            sx={{ mt: 2 }}
-          />
+
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mt: 3 }}>
             <IconButton
@@ -191,6 +217,14 @@ export default function ProductPage() {
               <AddIcon />
             </IconButton>
           </Box>
+
+          <TextField
+            label="More Details from customer to Store (Optional)"
+            variant="outlined"
+            fullWidth
+            sx={{ mt: 2 }}
+          />
+
 
           <Button
             variant="contained"
@@ -223,8 +257,8 @@ export default function ProductPage() {
               },
               '&:hover': {
                 backgroundColor: '#388e3c',
-                transform: 'scale(1.03)', // تكبير بسيط
-                boxShadow: '0 0 12px 4px rgba(76, 175, 80, 0.5)' // وهج ناعم
+                transform: 'scale(1.03)',
+                boxShadow: '0 0 12px 4px rgba(76, 175, 80, 0.5)'
               },
             }}
           >
