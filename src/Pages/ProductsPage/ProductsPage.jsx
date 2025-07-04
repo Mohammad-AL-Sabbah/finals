@@ -77,6 +77,7 @@ export default function ProductPage() {
 
   const handleShippingChange = (event) => {
     setShipping(event.target.value);
+    console.log(event.target.value);
   };
 
   return (
@@ -269,3 +270,4 @@ export default function ProductPage() {
     </Box>
   );
 }
+ 

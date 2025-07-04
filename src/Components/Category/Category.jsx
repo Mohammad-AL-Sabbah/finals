@@ -168,6 +168,8 @@ function Category() {
           ))}
         </Slider>
       )}
+            
+
     </div>
   );
 }

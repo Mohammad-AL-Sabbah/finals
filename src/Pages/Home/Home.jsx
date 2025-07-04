@@ -3,15 +3,18 @@ import Products from '../../Components/Products/Products'
 import { Box } from '@mui/material'
 import Category from '../../Components/Category/Category';
 import MyCarousel from "../../Components/Carousel/MyCarousel.jsx";
+import Ads from '../../Components/AdsGlopal.jsx/Ads';
 
 function Home() {
   const title = document.getElementById('title');
-  title.innerHTML = 'Home';
+  title.innerHTML = 'ElecTech Shop';
   
   return (
     <>
     <MyCarousel />
-    <Category />
+    <Category/>
+        <Ads />
+
      {/* فش منتجات بتكفي شغال هيك للتجربة */}
 <Box sx={{  display: 'flex',
     justifyContent: 'center',
