@@ -1,56 +1,68 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function MyCarousel() {
   const [index, setIndex] = useState(0);
   const [fadeText, setFadeText] = useState(true);
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setScreenWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const imageStyle = {
-    height: '35rem',
+    height:
+      screenWidth < 768
+        ? '14rem'
+        : screenWidth < 1024
+        ? '22rem'
+        : '35rem',
     objectFit: 'cover',
   };
 
-  // نصوص متعددة الأسطر لكل شريحة كمصفوفة أسطر
   const texts = [
-    [
-      'Flat 30% Discount',
-      'VR Virtual Reality',
-      'Headset Smartphone'
-    ],
-    [
-      'Flat 20% Discount',
-      'JBL Tune 510 Ear',
-      'Wireless Headphones',
-    ],
+    ['Flat 30% Discount', 'VR Virtual Reality', 'Headset Smartphone'],
+    ['Flat 20% Discount', 'JBL Tune 510 Ear', 'Wireless Headphones'],
   ];
 
   const handleSelect = (selectedIndex) => {
-    setFadeText(false); // يبدأ التلاشي
-
+    setFadeText(false);
     setTimeout(() => {
-      setIndex(selectedIndex); // يغير الشريحة
-      setFadeText(true); // يظهر النص الجديد مع تأثير
-    }, 400); // مدة التلاشي بالميلي ثانية
+      setIndex(selectedIndex);
+      setFadeText(true);
+    }, 400);
   };
 
-  // تخصيصات النص كاملة هنا:
   const textContainerStyle = {
     position: 'absolute',
     top: '10px',
-    right: '20px',
+    right: screenWidth < 768 ? '10px' : screenWidth < 1024 ? '30px' : '200px',
     color: '#0d6efd',
     fontWeight: '700',
-    fontSize: '2.6rem',        // حجم الخط
+    fontSize:
+      screenWidth < 480
+        ? '1.2rem'
+        : screenWidth < 768
+        ? '1.8rem'
+        : screenWidth < 1024
+        ? '2rem'
+        : '2.6rem',
     lineHeight: '1.4',
-    marginTop: '150px',
-    marginRight: '200px',
-    maxWidth: '420px',
+    marginTop:
+      screenWidth < 768
+        ? '80px'
+        : screenWidth < 1024
+        ? '100px'
+        : '150px',
+    maxWidth: screenWidth < 768 ? '90%' : '420px',
     textAlign: 'right',
-    textShadow: '1px 1px 3px rgba(0,0,0,0.2)', // ظل خفيف للنص
+    textShadow: '1px 1px 3px rgba(0,0,0,0.2)',
     transition: 'opacity 0.3s ease, transform 0.3s ease',
     opacity: fadeText ? 1 : 0,
-    transform: fadeText ? 'translateY(0)' : 'translateY(-20px)',  // حركة تصاعدية عند الاختفاء
+    transform: fadeText ? 'translateY(0)' : 'translateY(-20px)',
     zIndex: 20,
     userSelect: 'none',
     pointerEvents: 'none',
@@ -94,7 +106,6 @@ function MyCarousel() {
           });
         }}
       >
-        {/* النص في الأعلى يمين مع التخصيص والأسطر المتعددة */}
         <div style={textContainerStyle} aria-live="polite">
           {texts[index].map((line, i) => (
             <p key={i} style={{ margin: 0, padding: 0 }}>
@@ -115,7 +126,7 @@ function MyCarousel() {
           <Carousel.Item>
             <img
               className="d-block w-100"
-  src="/Carousel/sample-2.jpg"
+              src="/Carousel/sample-2.jpg"
               alt="الشريحة الأولى"
               style={imageStyle}
             />
@@ -124,7 +135,7 @@ function MyCarousel() {
           <Carousel.Item>
             <img
               className="d-block w-100"
-  src="/Carousel/sample-1.jpg"
+              src="/Carousel/sample-1.jpg"
               alt="الشريحة الثانية"
               style={imageStyle}
             />
@@ -132,7 +143,6 @@ function MyCarousel() {
         </Carousel>
       </div>
 
-      {/* المؤشرات */}
       <div style={indicatorsStyle}>
         {[0, 1].map((idx) => (
           <div
@@ -168,11 +178,11 @@ function MyCarousel() {
         }
 
         .carousel-control-prev {
-          left: 50px;
+          left: 20px;
         }
 
         .carousel-control-next {
-          right: 50px;
+          right: 20px;
         }
 
         .carousel-control-prev:hover,
@@ -186,6 +196,20 @@ function MyCarousel() {
           filter: brightness(0) invert(1);
           width: 20px;
           height: 20px;
+        }
+
+        @media (max-width: 768px) {
+          .carousel-control-prev,
+          .carousel-control-next {
+            width: 32px;
+            height: 32px;
+          }
+
+          .carousel-control-prev-icon,
+          .carousel-control-next-icon {
+            width: 16px;
+            height: 16px;
+          }
         }
       `}</style>
     </div>
