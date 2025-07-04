@@ -20,6 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LoginIcon from '@mui/icons-material/Login';
+import { keyframes } from '@mui/system';
 
 export default function ProductDialog({ open, handleClose, product }) {
   const theme = useTheme();
@@ -41,6 +42,8 @@ export default function ProductDialog({ open, handleClose, product }) {
       alert('المتصفح لا يدعم ميزة المشاركة.');
     }
   };
+
+
 
 const handleBuyNow = () => {
   const token = localStorage.getItem('Usertoken');
@@ -119,6 +122,14 @@ const handleBuyNow = () => {
   if (!product) return null;
 
   const flexDirection = isMd ? 'column' : 'row-reverse';
+
+const flash = keyframes`
+  0% { transform: scale(1); box-shadow: 0 0 0 rgba(0, 0, 0, 0); }
+  50% { transform: scale(1.05); box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); }
+  100% { transform: scale(1); box-shadow: 0 0 0 rgba(0, 0, 0, 0); }
+`;
+
+
 
   return (
     <>
@@ -248,15 +259,15 @@ const handleBuyNow = () => {
                 color="text.secondary"
                 mb={2}
               >
-                <span style={{ color: '#d4a373', marginRight: '4px' }}>
+                <span style={{ color: '#1976d2', marginRight: '4px' }}>
                   Shipping is calculated at checkout
                 </span>
-                <LocalShippingIcon style={{ color: '#d4a373', marginRight: '4px' }} />
+                <LocalShippingIcon style={{ color: '#1976d2', marginRight: '4px' }} />
               </Typography>
 
               <Typography variant="body2" mb={2}>
                 {product.description} <br />
-                <p style={{ color: '#d4a373', fontSize: '12px' }}>You can Zoom on the product </p>
+                <p style={{ color: 'black', fontSize: '12px' }}>You can Zoom on the product </p>
               </Typography>
             </Box>
 
@@ -280,7 +291,7 @@ const handleBuyNow = () => {
               <Typography fontSize="14px">in stock: {product.quantity} product</Typography>
             </Box>
 
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: '10px' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: '5px' }}>
               <span>Rate this product</span>
               <Rating
                 value={userRating}
@@ -292,25 +303,42 @@ const handleBuyNow = () => {
               />
             </Box>
 
-            <Typography variant="h5" fontWeight="bold" color="black" mb={1}>
+            <Typography variant="h5" fontWeight="bold" color="black" >
               Price is : {product.price}$
             </Typography>
 
-            <Box mt={3} display="flex" gap={2} flexWrap="wrap">
-              <Button
-                variant="contained"
-                sx={{ flex: 1, bgcolor: '#d4a373', '&:hover': { bgcolor: '#c58f5f' } }}
-              >
-                Add to Cart
-              </Button>
-              <Button
-                variant="contained"
-                sx={{ flex: 1, bgcolor: '#000', '&:hover': { bgcolor: '#333' } }}
-                onClick={handleBuyNow}
-              >
-                Buy Now
-              </Button>
-            </Box>
+            <Box mt={1} mb={1} display="flex" gap={2} flexWrap="wrap">
+      <Button
+        variant="contained"
+        sx={{
+          flex: 1,
+          bgcolor: '#1976d2',
+          transition: 'all 0.3s ease',
+          '&:hover': {
+            bgcolor: '#1565c0',
+            animation: `${flash} 0.6s ease`,
+          },
+        }}
+      >
+        Add to Cart
+      </Button>
+
+      <Button
+        variant="contained"
+        onClick={handleBuyNow}
+        sx={{
+          flex: 1,
+          bgcolor: 'rgb(56, 142, 60)',
+          transition: 'all 0.3s ease',
+          '&:hover': {
+            bgcolor: '#2e7d32',
+            animation: `${flash} 0.6s ease`,
+          },
+        }}
+      >
+        Buy Now
+      </Button>
+    </Box>
 
             <Box  display="flex" gap={1}>
               <IconButton onClick={() => handleLike(product.id)}>

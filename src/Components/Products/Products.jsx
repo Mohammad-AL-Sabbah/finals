@@ -82,7 +82,7 @@ const url = `${window.location.origin}/ProductsPage/${product.id}`;
 
   return (
     <>
-      <Box sx={{ display: 'flex', flexWrap: 'wrap',mt:3, justifyContent: 'center', gap: 2 }}>
+      <Box id="products" sx={{ display: 'flex', flexWrap: 'wrap',mt:3, justifyContent: 'center', gap: 2 }}>
         {products.map((product) => (
           <Card
             key={product.id}

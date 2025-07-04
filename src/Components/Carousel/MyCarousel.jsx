@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Button } from '@mui/material';
 
 function MyCarousel() {
   const [index, setIndex] = useState(0);
@@ -15,8 +16,10 @@ function MyCarousel() {
 
   const imageStyle = {
     height:
-      screenWidth < 768
-        ? '14rem'
+      screenWidth < 480
+        ? '12rem'
+        : screenWidth < 768
+        ? '16rem'
         : screenWidth < 1024
         ? '22rem'
         : '35rem',
@@ -38,47 +41,64 @@ function MyCarousel() {
 
   const textContainerStyle = {
     position: 'absolute',
-    top: '10px',
-    right: screenWidth < 768 ? '10px' : screenWidth < 1024 ? '30px' : '200px',
-    color: '#0d6efd',
+    top: screenWidth < 768 ? '12px' : '10px',
+    right: screenWidth < 480 ? '10px' : screenWidth < 768 ? '15px' : screenWidth < 1024 ? '30px' : '200px',
     fontWeight: '700',
     fontSize:
       screenWidth < 480
-        ? '1.2rem'
+        ? '1rem'
         : screenWidth < 768
-        ? '1.8rem'
+        ? '1.5rem'
         : screenWidth < 1024
         ? '2rem'
         : '2.6rem',
-    lineHeight: '1.4',
+    lineHeight: '1.3',
     marginTop:
-      screenWidth < 768
-        ? '80px'
+      screenWidth < 480
+        ? '60px'
+        : screenWidth < 768
+        ? '70px'
         : screenWidth < 1024
         ? '100px'
         : '150px',
     maxWidth: screenWidth < 768 ? '90%' : '420px',
     textAlign: 'right',
-    textShadow: '1px 1px 3px rgba(0,0,0,0.2)',
-    transition: 'opacity 0.3s ease, transform 0.3s ease',
+    textShadow: '1px 1px 3px rgba(0,0,0,0.1)',
+    transition: 'opacity 0.6s ease, transform 0.6s ease',
     opacity: fadeText ? 1 : 0,
-    transform: fadeText ? 'translateY(0)' : 'translateY(-20px)',
+    transform: fadeText ? 'translateX(0)' : 'translateX(30px)',
     zIndex: 20,
     userSelect: 'none',
     pointerEvents: 'none',
+    color: '#333',
+  };
+
+  const buttonStyle = {
+    marginTop: screenWidth < 480 ? '10px' : '15px',
+    padding: screenWidth < 480 ? '6px 14px' : '8px 18px',
+    backgroundColor: '#1976d2',
+    border: 'none',
+    borderRadius: '4px',
+    color: 'white',
+    fontWeight: '600',
+    fontSize: screenWidth < 480 ? '0.9rem' : '1rem',
+    cursor: 'pointer',
+    pointerEvents: 'auto', // للسماح بالضغط على الزر رغم أن الحاوية pointerEvents: none
+    userSelect: 'none',
+    transition: 'background-color 0.3s ease',
   };
 
   const indicatorsStyle = {
     display: 'flex',
     justifyContent: 'center',
-    marginTop: '-22px',
-    gap: '14px',
-    paddingBottom: '12px',
+    marginTop: '8px',
+    gap: screenWidth < 480 ? '10px' : '14px',
+    paddingBottom: screenWidth < 480 ? '8px' : '12px',
   };
 
   const dotStyle = (active) => ({
-    width: '14px',
-    height: '14px',
+    width: screenWidth < 480 ? '10px' : '14px',
+    height: screenWidth < 480 ? '10px' : '14px',
     borderRadius: '50%',
     backgroundColor: active ? '#0d6efd' : '#dee2e6',
     cursor: 'pointer',
@@ -108,17 +128,34 @@ function MyCarousel() {
       >
         <div style={textContainerStyle} aria-live="polite">
           {texts[index].map((line, i) => (
-            <p key={i} style={{ margin: 0, padding: 0 }}>
+            <p
+              key={i}
+              style={{
+                margin: 0,
+                padding: 0,
+                color: i === 1 ? '#1976d2' : '#333',
+              }}
+            >
               {line}
             </p>
           ))}
+
+          <Button
+            style={buttonStyle}
+            component="a"
+            href="#products"
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#155fa0')}
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#1976d2')}
+          >
+            Buy Now
+          </Button>
         </div>
 
         <Carousel
           activeIndex={index}
           onSelect={handleSelect}
           fade
-          interval={3000}
+          interval={2500}
           indicators={false}
           prevLabel=""
           nextLabel=""
@@ -159,59 +196,53 @@ function MyCarousel() {
         ))}
       </div>
 
-      <style>{`
-        .carousel-control-prev,
-        .carousel-control-next {
-          opacity: 0;
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          background-color: #0d6efd;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: background-color 0.3s ease, opacity 0.3s ease;
-          top: 50% !important;
-          transform: translateY(-50%);
-          z-index: 10;
-          position: absolute;
-        }
+   <style>{`
+  .carousel-control-prev,
+  .carousel-control-next {
+    opacity: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #0d6efd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease, opacity 0.3s ease;
+    top: 50% !important;
+    transform: translateY(-50%);
+    z-index: 10;
+    position: absolute;
+  }
 
-        .carousel-control-prev {
-          left: 20px;
-        }
+  .carousel-control-prev {
+    left: 20px;
+  }
 
-        .carousel-control-next {
-          right: 20px;
-        }
+  .carousel-control-next {
+    right: 20px;
+  }
 
-        .carousel-control-prev:hover,
-        .carousel-control-next:hover {
-          background-color: #0b5ed7;
-          opacity: 1 !important;
-        }
+  .carousel-control-prev:hover,
+  .carousel-control-next:hover {
+    background-color: #0b5ed7;
+    opacity: 1 !important;
+  }
 
-        .carousel-control-prev-icon,
-        .carousel-control-next-icon {
-          filter: brightness(0) invert(1);
-          width: 20px;
-          height: 20px;
-        }
+  .carousel-control-prev-icon,
+  .carousel-control-next-icon {
+    filter: brightness(0) invert(1);
+    width: 20px;
+    height: 20px;
+  }
 
-        @media (max-width: 768px) {
-          .carousel-control-prev,
-          .carousel-control-next {
-            width: 32px;
-            height: 32px;
-          }
+  @media (max-width: 768px) {
+    .carousel-control-prev,
+    .carousel-control-next {
+      display: none !important;
+    }
+  }
+`}</style>
 
-          .carousel-control-prev-icon,
-          .carousel-control-next-icon {
-            width: 16px;
-            height: 16px;
-          }
-        }
-      `}</style>
     </div>
   );
 }

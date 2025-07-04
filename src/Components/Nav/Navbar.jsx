@@ -97,7 +97,7 @@ function Navbar() {
           {/* Mobile: logo on right */}
           <Box sx={{ display: { xs: 'flex', md: 'none' }, flexGrow: 1, justifyContent: 'flex-end' }}>
             <Link to="/" style={{ textDecoration: 'none' }}>
-              <p style={{ margin: 0, fontSize: '20px', fontWeight: 'bold', color: 'white' }}>Stors</p>
+              <p style={{ margin: 0, fontSize: '20px', fontWeight: 'bold', color: 'white' }}>ElecTech</p>
             </Link>
           </Box>
 
@@ -136,7 +136,7 @@ function Navbar() {
             <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
               <Box sx={{ mr: 2 }}>
                 <Link to="/" style={{ textDecoration: 'none' }}>
-                  <p style={{ margin: 0, fontSize: '20px', fontWeight: 'bold', color: 'white' }}>Stors</p>
+                  <p style={{ margin: 0, fontSize: '20px', fontWeight: 'bold', color: 'white' }}>ElecTech</p>
                 </Link>
               </Box>
               {leftPages.map((page) => (
