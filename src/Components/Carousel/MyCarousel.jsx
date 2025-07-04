@@ -115,7 +115,7 @@ function MyCarousel() {
           <Carousel.Item>
             <img
               className="d-block w-100"
-              src="../../../public/Carousel/sample-2.jpg"
+  src="/Carousel/sample-2.jpg"
               alt="الشريحة الأولى"
               style={imageStyle}
             />
@@ -124,7 +124,7 @@ function MyCarousel() {
           <Carousel.Item>
             <img
               className="d-block w-100"
-              src="../../../public/Carousel/sample-1.jpg"
+  src="/Carousel/sample-1.jpg"
               alt="الشريحة الثانية"
               style={imageStyle}
             />
