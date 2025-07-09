@@ -1,342 +1,163 @@
-import React from 'react'
-import { InputAdornment, TextField, Typography } from '@mui/material'
-import { Box, FormControl, InputLabel, OutlinedInput, IconButton } from '@mui/material';
-import { Button } from '@mui/material';
-import axios from 'axios'
+import React from 'react';
+import {
+  Box,
+  TextField,
+  Typography,
+  FormControl,
+  InputLabel,
+  OutlinedInput,
+  InputAdornment,
+  IconButton,
+  Divider,
+  Button,
+  useTheme,
+} from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import AuthButtons from '../../Buttons/AuthButtons';
+import { useNavigate, Link } from 'react-router-dom';
+import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import GoogleIcon from '@mui/icons-material/Google';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import EmailIcon from '@mui/icons-material/Email';
 
 function Register() {
-const {register, handleSubmit} = useForm();
-const navigate = useNavigate();
+  const { register, handleSubmit } = useForm();
+  const navigate = useNavigate();
+  const theme = useTheme();
 
-const registerUser = async (data) => {
-    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/Account/register`, data);
-    if(response.status == 200){
-        navigate('/login');
-    }
-}
-
-
- const [showPassword, setShowPassword] = React.useState(false);
-
+  const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
+  const handleMouseDownPassword = (event) => event.preventDefault();
+
+  const registerUser = async (data) => {
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/Account/register`, data);
+      if (response.status === 200) {
+        toast.success('Registration successful!', { autoClose: 2000, position: 'top-center', theme: 'colored' });
+        setTimeout(() => navigate('/login'), 2000);
+      }
+    } catch (error) {
+      toast.error('Registration failed. Please try again.', { autoClose: 2000, position: 'top-center', theme: 'colored' });
+    }
   };
 
-
-    const title = document.getElementById('title');
-  if(title) title.innerHTML = 'Register';  
+  const title = document.getElementById('title');
+  if (title) title.innerHTML = 'Register Page';
 
   return (
-    <>
-    <Box sx={{width:"100%", marginBottom:'1rem' , height:'5rem', backgroundColor:'#757575',display:'flex', justifyContent:'center', alignItems:'center'}} >
-        <Typography variant='h4' sx={{color:'white', padding:'1rem'}}>Register Page</Typography>
-    </Box>
+    <Box sx={{
+      display: 'flex',
+      height: '100vh',
+      flexDirection: { xs: 'column', md: 'row' },
+      overflow: 'hidden'
+    }}>
 
-    <Box component={'form'} sx={{ width: '80%',display: 'flex', justifyContent: 'center', alignItems: 'center', margin: 'auto', flexDirection: 'column', gap: '1rem' }} onSubmit={handleSubmit(registerUser)}>
-       
-   {/* =========  Fitst Name field ========= */}
-<TextField
-{...register('firstName')}
-  fullWidth
-  type='text'
-  label="First Name"
-  id="fullWidth"
-  required
-  sx={{ 
-    width: { xs: '90%', sm: '70%', md: '50%', lg: '35%' }  // متجاوب حسب حجم الشاشة
-  }}
-  InputLabelProps={{
-    sx: {
-      color: 'black',
-      fontWeight: 'bold',
-      fontSize: '0.8rem',
-      '&.Mui-focused': {
-        color: 'black',
-      },
-       '& .MuiFormLabel-asterisk': {
-        color: 'red',
-      },
-    },
-  }}
-  InputProps={{
-    sx: {
-      '& .MuiOutlinedInput-notchedOutline': {
-        borderColor: 'gray', 
-      },
-      '&:hover .MuiOutlinedInput-notchedOutline': {
-        borderColor: 'black',
-      },
-      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-        borderColor: 'black',
-      },
-    },
-  }}
-/>
-   {/* ========= Fitst Name field end ========= */} 
+      <Box
+        sx={{
+          flex: 1,
+          backgroundImage: 'url(https://e0.pxfuel.com/wallpapers/180/89/desktop-wallpaper-couple-alone-sunset-neon-mountains-moon.jpg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          display: { xs: 'none', md: 'block' },
+          minHeight: { md: '100vh', lg: '100%' },
+        }}
+      />
 
+      <Box
+        component="form"
+        onSubmit={handleSubmit(registerUser)}
+        sx={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          px: { xs: 3, sm: 6, md: 4 },
+          py: { xs: 6, md: 0 },
+          gap: 2,
+          width: '100%',
+          maxWidth: { md: '600px', lg: '700px' },
+          mx: 'auto'
+        }}
+      >
+        <Typography variant='h4' fontWeight='bold' textAlign='center'>Register here</Typography>
+        <Typography variant='body1' color='text.secondary' textAlign='center'>Let's create your account</Typography>
 
-   {/* =========  Last Name field ========= */}
-<TextField
-{...register('lastName')}
-  fullWidth
-  type='text'
-  label="Last Name"
-  required
-  id="fullWidth"
-  sx={{ 
-    width: { xs: '90%', sm: '70%', md: '50%', lg: '35%' }
-  }}
-  InputLabelProps={{
-    sx: {
-      color: 'black',
-      fontWeight: 'bold',
-      fontSize: '0.8rem',
-      '&.Mui-focused': {
-        color: 'black',
-      },
-       '& .MuiFormLabel-asterisk': {
-        color: 'red',
-      },
-    },
-  }}
-  InputProps={{
-    sx: {
-      '& .MuiOutlinedInput-notchedOutline': {
-        borderColor: 'gray',
-      },
-      '&:hover .MuiOutlinedInput-notchedOutline': {
-        borderColor: 'black',
-      },
-      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-        borderColor: 'black', 
-      },
-    },
-  }}
-/>
+        <TextField {...register('firstName')} label='First Name' required fullWidth sx={{ maxWidth: 400 }} />
+        <TextField {...register('lastName')} label='Last Name' required fullWidth sx={{ maxWidth: 400 }} />
+        <TextField {...register('userName')} label='User Name' required fullWidth sx={{ maxWidth: 400 }} />
+        <TextField {...register('email')} label='Email' type='email' required fullWidth sx={{ maxWidth: 400 }} />
 
-   {/* =========  Last Name field end ========= */}
+        <FormControl fullWidth variant="outlined" required sx={{ maxWidth: 400 }}>
+          <InputLabel htmlFor="password">Password</InputLabel>
+          <OutlinedInput
+            {...register('password')}
+            id="password"
+            type={showPassword ? 'text' : 'password'}
+            label="Password"
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+        </FormControl>
 
-   {/* =========  user Name field ========= */}
+        <FormControl fullWidth variant="outlined" required sx={{ maxWidth: 400 }}>
+          <InputLabel htmlFor="confirmPassword">Confirm Password</InputLabel>
+          <OutlinedInput
+            {...register('confirmPassword')}
+            id="confirmPassword"
+            type={showPassword ? 'text' : 'password'}
+            label="Confirm Password"
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+        </FormControl>
 
-<TextField
-{...register('userName')}
-  fullWidth
-  type='text'
-  label="User Name"
-  required
-  id="fullWidth"
-  sx={{ 
-    width: { xs: '90%', sm: '70%', md: '50%', lg: '35%' }
-  }}
-  InputLabelProps={{
-    sx: {
-      color: 'black',
-      fontWeight: 'bold',
-      fontSize: '0.8rem',
-      '&.Mui-focused': {
-        color: 'black',
-      },
-       '& .MuiFormLabel-asterisk': {
-        color: 'red',
-      },
-    },
-  }}
-  InputProps={{
-    sx: {
-      '& .MuiOutlinedInput-notchedOutline': {
-        borderColor: 'gray',
-      },
-      '&:hover .MuiOutlinedInput-notchedOutline': {
-        borderColor: 'black',
-      },
-      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-        borderColor: 'black', 
-      },
-    },
-  }}/>
+        <TextField {...register('birthOfDate')} type="date" label="Birthday" InputLabelProps={{ shrink: true }} required fullWidth sx={{ maxWidth: 400 }} />
 
-
-   {/* =========  user Name field end ========= */}
-
-      {/* =========  Email field  ========= */}
-
-<TextField
-{...register('email')}
-type='email'
-  fullWidth
-  label="Email"
-  required
-  id="fullWidth"
-  sx={{ 
-    width: { xs: '90%', sm: '70%', md: '50%', lg: '35%' }
-  }}
-  InputLabelProps={{
-    sx: {
-      color: 'black',
-      fontWeight: 'bold',
-      fontSize: '0.8rem',
-      '&.Mui-focused': {
-        color: 'black',
-      },
-       '& .MuiFormLabel-asterisk': {
-        color: 'red',
-      },
-    },
-  }}
-  InputProps={{
-    sx: {
-      '& .MuiOutlinedInput-notchedOutline': {
-        borderColor: 'gray',
-      },
-      '&:hover .MuiOutlinedInput-notchedOutline': {
-        borderColor: 'black',
-      },
-      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-        borderColor: 'black', 
-      },
-    },
-  }}/>
-      {/* =========  Email field end  ========= */}
-
-      {/* =========  Password field  ========= */}
-
-<FormControl fullWidth sx={{ width: { xs: '90%', sm: '70%', md: '50%', lg: '35%' } }} variant="outlined" required>
-  <InputLabel
-
-    htmlFor="outlined-adornment-password"
-    sx={{
-      color: 'black',
-      fontWeight: 'bold',
-      fontSize: '0.8rem',
-      '&.Mui-focused': { color: 'black' },
-      '& .MuiFormLabel-asterisk': { color: 'red' },
-    }}
-  >
-    Password
-    
-  </InputLabel>
-  <OutlinedInput
-        {...register('password')}
-
-    id="outlined-adornment-password"
-    type={showPassword ? 'text' : 'password'}
-    label="Password"
-    sx={{
-      '& .MuiOutlinedInput-notchedOutline': { borderColor: 'gray' },
-      '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'black' },
-      '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'black' },
-    }}
-    endAdornment={
-      <InputAdornment position="end">
-        <IconButton
-          aria-label={showPassword ? 'Hide password' : 'Show password'}
-          onClick={handleClickShowPassword}
-          onMouseDown={handleMouseDownPassword}
-          edge="end"
+        <Button
+          type='submit'
+          variant='contained'
+          fullWidth
+          sx={{ maxWidth: 400, mt: 1 }}
         >
-          {showPassword ? <VisibilityOff /> : <Visibility />}
-        </IconButton>
-      </InputAdornment>
-    }
-  />
-  
-</FormControl>
-      {/* =========  Password field end  ========= */}
+          Register
+        </Button>
 
-            {/* ========= confirm Password field   ========= */}
-<FormControl fullWidth sx={{ width: { xs: '90%', sm: '70%', md: '50%', lg: '35%' } }} variant="outlined" required>
-    
-  <InputLabel
+        <Box sx={{ textAlign: 'center' }}>
+          <Link to="/login" style={{ fontSize: '0.85rem', display: 'block', textDecoration: 'underline', color: theme.palette.primary.main }}>
+            Already have an account? Login here
+          </Link>
+          <Link to="/" style={{ fontSize: '0.85rem', display: 'block', textDecoration: 'underline', color: theme.palette.primary.main }}>
+            Back to Guest page
+          </Link>
+        </Box>
 
-    htmlFor="outlined-adornment-password-confirm"
-    sx={{
-      color: 'black',
-      fontWeight: 'bold',
-      fontSize: '0.8rem',
-      '&.Mui-focused': { color: 'black' },
-      '& .MuiFormLabel-asterisk': { color: 'red' },
-    }}
-  >
-    Confirm Password
-  </InputLabel>
-  <OutlinedInput
-        {...register('confirmPassword')}
+      </Box>
 
-    id="outlined-adornment-password-confirm"
-    type={showPassword ? 'text' : 'password'}
-    label="Confirm Password"
-    sx={{
-      '& .MuiOutlinedInput-notchedOutline': { borderColor: 'gray' },
-      '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'black' },
-      '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'black' },
-    }}
-    endAdornment={
-      <InputAdornment position="end">
-        <IconButton
-          aria-label={showPassword ? 'Hide password' : 'Show password'}
-          onClick={handleClickShowPassword}
-          onMouseDown={handleMouseDownPassword}
-          edge="end"
-        >
-          {showPassword ? <VisibilityOff /> : <Visibility />}
-        </IconButton>
-      </InputAdornment>
-    }
-  />
-</FormControl>
-            {/* ========= confirm Password field end  ========= */}
-
-            {/* ========= Birthday field   ========= */}
-<TextField
-{...register('birthOfDate')}
-  type="date"
-  fullWidth
-  required
-  label="Birthday"
-  id="birthday"
-  sx={{ 
-    width: { xs: '90%', sm: '70%', md: '50%', lg: '35%' }
-  }}
-  InputLabelProps={{
-    shrink: true, 
-    sx: {
-      color: 'black',
-      fontWeight: 'bold',
-      fontSize: '0.8rem',
-      '&.Mui-focused': {
-        color: 'black',
-      },
-      '& .MuiFormLabel-asterisk': {
-        color: 'red',
-      },
-    },
-  }}
-  InputProps={{
-    sx: {
-      '& .MuiOutlinedInput-notchedOutline': {
-        borderColor: 'gray',
-      },
-      '&:hover .MuiOutlinedInput-notchedOutline': {
-        borderColor: 'black',
-      },
-      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-        borderColor: 'black',
-      },
-    },
-  }}
-/>
-   {/* ========= Birthday field end  ========= */}
-
-<AuthButtons text = 'Register'/>
+      <ToastContainer />
     </Box>
-    </>
-  )
+  );
 }
 
-export default Register
+export default Register;

@@ -31,13 +31,17 @@ function Info() {
     );
   }
 
+  const title = document.getElementById('title');
+  if (title) title.innerHTML = 'Profile info';
   return (
     <Box sx={{
-      minHeight: '80vh',
+     
       display: 'flex',
+      flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
       p: 2,
+  
     }}>
       <Box sx={{
         width: '100%',
@@ -102,15 +106,17 @@ function Info() {
 
 
           
-          <Box sx={{ mt: 4, textAlign: 'left',display: 'flex',justifyContent: 'center',alignItems: 'center',gap: 10}}>
+    
+        </Box>
+      </Box>
+            <Box sx={{ mt: 4, textAlign: 'left',display: 'flex',justifyContent: 'center',alignItems: 'center',gap: 10}}>
           
             <LabeledLine label="First Name" value={user.firstName} />
             <LabeledLine label="Last Name" value={user.lastName} />
             <LabeledLine label="Username" value={user.userName} />
           </Box>
-        </Box>
-      </Box>
     </Box>
+    
   );
 }
 
@@ -125,9 +131,9 @@ function InfoItem({ label, value }) {
 
 function LabeledLine({ label, value }) {
   return (
-    <Box sx={{ display: 'flex', gap: 1, mb: 1 }}>
-      <Typography variant="body1" fontWeight="500">{label}:</Typography>
-      <Typography variant="body1">{value}</Typography>
+    <Box sx={{ display: 'flex', gap: 1, mb: 1,border: '1px solid #1976d2',padding: 1,borderRadius: 2,justifyContent: 'center',alignItems: 'center',backgroundColor: '#1976d2' }}>
+      <Typography variant="body1" fontWeight="500" color="white" >{label}:</Typography>
+      <Typography variant="body1" fontWeight="500" color="white">{value}</Typography>
     </Box>
   );
 }

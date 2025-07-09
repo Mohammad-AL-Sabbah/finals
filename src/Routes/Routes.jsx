@@ -12,6 +12,7 @@ import ForgetPasswordCode from '../Pages/ForgetPasswordCode/ForgetPasswordCode.j
 import ProductById from '../Pages/ProductById/ProductById.jsx';
 import ProtectedRouter from '../Components/ProtectedRouter/ProtectedRouter.jsx';
 import UserProfile from '../Pages/UserProfile/UserProfile.jsx';
+
 const routes = createBrowserRouter([
     {
         path: '/',
@@ -19,49 +20,67 @@ const routes = createBrowserRouter([
         errorElement: <Error />,
         children: [
             {
-                path: '/',
-                element: <Home />
+                index: true,
+                element: <Home />,
+                            viewTransition:true
+
             },
             {
         path: '/checkout',
             element:
             <ProtectedRouter>
             <CheckOut />  
-            </ProtectedRouter>
+            
+            </ProtectedRouter>,
+             viewTransition:true
+
         },{
         path: '/productsPage/:id',
             element:
-            <ProductsPage />
+            <ProductsPage />,
+             
+
         },{
         path: '/login',
             element:
-            <Login />
+            <Login />,
+                        viewTransition:true
+
         },{
         path: '/register',
             element:
-            <Register />
+            <Register />,
+                        viewTransition:true
+
         },{
         path: '/cart',
             element:
             <ProtectedRouter>
             <Cart />
-            </ProtectedRouter>
+            </ProtectedRouter>,
+                        viewTransition:true
+
         },
         {
         path: '/forget-password',
             element:
-            <ForgetPassword />
+            <ForgetPassword />,
+                        viewTransition:true
+
         },
         {
         path: '/forget-password-code',
             element:
-            <ForgetPasswordCode />
+            <ForgetPasswordCode />,
+                        viewTransition:true
+
         }
         ,
         {
        path:"/ProductById/:id/:name",
             element:
-            <ProductById />
+            <ProductById />,
+            viewTransition:true
         }
         ,
         {
@@ -70,7 +89,9 @@ const routes = createBrowserRouter([
         <ProtectedRouter>
             <UserProfile />
 
-        </ProtectedRouter>
+        </ProtectedRouter>,
+                    viewTransition:true
+
 
         }
         ]

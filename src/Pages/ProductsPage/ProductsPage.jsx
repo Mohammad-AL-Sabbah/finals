@@ -112,7 +112,7 @@ export default function ProductPage() {
             </Typography>
 
             <Typography variant="subtitle1" sx={{ mt: 4, mb: 1 }}>
-              :Available Colors
+              Available Colors :
             </Typography>
             <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
               {colorOptions.map((color) => (

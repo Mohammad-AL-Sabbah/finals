@@ -118,10 +118,7 @@ function Category() {
           {categories.map((item, index) => (
             <div key={index} style={{ padding: "0 10px" }}>
               <Link
-to={`/ProductById/${item.id}/${encodeURIComponent(item.name)}`}
-                
-                style={{ textDecoration: "none" }}
-              >
+to={`/ProductById/${item.id}/${encodeURIComponent(item.name)}`}style={{ textDecoration: "none" }}>
                 <div
                   style={{
                     textAlign: "center",

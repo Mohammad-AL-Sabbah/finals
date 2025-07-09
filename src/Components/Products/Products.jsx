@@ -94,7 +94,8 @@ function Products() {
         {products.map((product) => (
           <Card
             key={product.id}
-            onClick={() => navigate(`/ProductsPage/${product.id}`)}
+            onClick={() => navigate(`/ProductsPage/${product.id}`,{ viewTransition: true })}
+            
             elevation={0}
             sx={(theme) => ({
               maxWidth: 170,

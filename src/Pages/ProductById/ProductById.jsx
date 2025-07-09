@@ -75,10 +75,12 @@ function ProductById() {
     setSnackbarMessage(message);
     setShowSnackbar(true);
   };
-
+useEffect(() => {
+  window.scrollTo(0, 0);
+}, []);
   return (
     <>
-      <Box id="products" sx={{height:'80vh', display: 'flex', flexWrap: 'wrap', mt: 3, justifyContent: 'center', gap: 2 }}>
+      <Box id="products" sx={{ height:'50vh',display: 'flex', flexWrap: 'wrap', mt: 3, justifyContent: 'center', gap: 2,pb:2 }}>
         {products.map((product) => (
           <Card
             key={product.id}
