@@ -26,8 +26,8 @@ function Products() {
 
   const getProduct = async () => {
     try {
-      const { data } = await axios.get(`${import.meta.env.VITE_BASE_URL}/products`);
-      setProducts(data);
+      const { data } = await axios.get(`https://mytshop.runasp.net/api/products`);
+      setProducts(data.data);
     } catch (error) {
       console.error('Failed to fetch products', error);
     }
@@ -49,8 +49,7 @@ function Products() {
 
   const handleShare = (e, product) => {
     e.stopPropagation();
-const url = `${window.location.origin}/ProductsPage/${product.id}`;
-    
+    const url = `${window.location.origin}/ProductsPage/${product.id}`;
     if (navigator.share) {
       navigator
         .share({
@@ -82,16 +81,25 @@ const url = `${window.location.origin}/ProductsPage/${product.id}`;
 
   return (
     <>
-      <Box id="products" sx={{ display: 'flex', flexWrap: 'wrap',mt:3, justifyContent: 'center', gap: 2 }}>
+      <Box
+        id="products"
+        sx={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          mt: 3,
+          justifyContent: 'center',
+          gap: 2,
+        }}
+      >
         {products.map((product) => (
           <Card
             key={product.id}
             onClick={() => navigate(`/ProductsPage/${product.id}`)}
-            image src={product.mainImg}
             elevation={0}
-            sx={{
-              maxWidth: 150,
-              background: '#fff',
+            sx={(theme) => ({
+              maxWidth: 170,
+              maxHeight: 280,
+              background: theme.palette.background.paper,
               borderRadius: 3,
               textAlign: 'center',
               margin: '10px 7px',
@@ -108,9 +116,15 @@ const url = `${window.location.origin}/ProductsPage/${product.id}`;
                 visibility: 'visible',
                 transform: 'translateY(0) scale(1)',
               },
-            }}
+            })}
           >
-            <Box sx={{ borderRadius: 3, overflow: 'hidden', position: 'relative' }}>
+            <Box
+              sx={{
+                borderRadius: 3,
+                overflow: 'hidden',
+                position: 'relative',
+              }}
+            >
               <CardMedia
                 component="img"
                 height="150"
@@ -136,9 +150,8 @@ const url = `${window.location.origin}/ProductsPage/${product.id}`;
                   visibility: 'hidden',
                   transform: 'translateY(10px) scale(0.95)',
                   transition: 'all 0.3s ease',
-                  backgroundColor: 'rgba(255,255,255,0.0)',
+                  backgroundColor: 'rgba(255,255,255,0)',
 
-                  // الأيقونات ظاهرة دائمًا على الشاشات الصغيرة
                   '@media (max-width: 600px)': {
                     opacity: 1,
                     visibility: 'visible',
@@ -221,9 +234,9 @@ const url = `${window.location.origin}/ProductsPage/${product.id}`;
 
             <CardContent sx={{ padding: '8px 0 0' }}>
               <Typography
-                variant="body2"
+                variant="h6"
                 color="text.primary"
-                sx={{ fontSize: '16px', fontWeight: 500 }}
+                sx={{ fontSize: '14px', fontWeight: 500 }}
                 noWrap
               >
                 {product.name}

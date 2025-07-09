@@ -3,21 +3,19 @@ import { Box, Typography } from "@mui/material";
 const adsData = [
   {
     image: "Ads/ADS3.jpg",
-    topText: "خصم يصل إلى",
-    centerText: "50%",
-    bottomText: "على جميع المنتجات",
+    topText: "Motorola G64 5G 12GB",
+    centerText: "From $178.00",
   },
   {
     image: "Ads/ADS2.jpg",
-    topText: "عروض الصيف",
-    centerText: "اشترِ واحدة",
-    bottomText: "واحصل على الثانية مجانًا",
+    topText: "Boat Wave Call Smart Watch",
+    centerText: "From $14.27",
+    
   },
   {
     image: "Ads/ADS.jpg",
-    topText: "وصل حديثًا",
-    centerText: "منتجات مميزة",
-    bottomText: "سارع بالطلب",
+    topText: "Latest Wireless Headphones",
+    centerText: "From $49.00",
   },
 ];
 
@@ -28,6 +26,7 @@ const Ads = () => {
         width: "90%",
         margin: "auto",
         mt: 3,
+        mb: 10,
         display: "flex",
         flexWrap: "wrap",
         justifyContent: "space-evenly",
@@ -66,21 +65,22 @@ const Ads = () => {
           <Box
             sx={{
               position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
+              top:5,
+              right: 14,
+              width: "60%",
               height: "100%",
               display: "flex",
+              flexWrap: "wrap",
               flexDirection: "column",
               justifyContent: "space-between",
               alignItems: "flex-end", // للنص على اليمين
               color: "white",
               textAlign: "right",
-              padding: "10px",
+              padding: "15px",
               pointerEvents: "none",
             }}
           >
-            <Typography variant="subtitle2" sx={{ fontWeight: "bold" }}>
+            <Typography variant="h5" sx={{ fontWeight: "bold" }}>
               {ad.topText}
             </Typography>
             <Typography variant="h6" sx={{ fontWeight: "bold" }}>

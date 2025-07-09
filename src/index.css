@@ -3,3 +3,16 @@
   padding: 0;
   box-sizing: border-box;
 }
+.MuiRating-icon, .MuiRating-iconEmpty, .MuiRating-iconFilled {
+  font-family: 'Material Icons' !important;
+  font-style: normal;
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  line-height: 1;
+  direction: ltr;
+  vertical-align: middle;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

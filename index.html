@@ -2,12 +2,48 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" id="icon" href="" />
+    <link rel="icon" type="image/svg+xml" id="icon" href="public/favicon/cc2f9266-f386-46be-9ffb-31958b6d5b88-removebg-preview.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title id="title"></title>
+ <style>
+  button#chatbase-bubble-button {
+    bottom:40px !important; /* المسافة من الأسفل */
+    right: 20px !important;  /* المسافة من اليمين */
+    background-color: #0084ff !important; /* لون الخلفية */
+    border-radius: 50% !important; /* شكل دائري */
+    width: 56px !important;
+    height: 56px !important;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
+    cursor: pointer !important;
+    transition: background-color 0.3s !important;
+  }
+
+  button#chatbase-bubble-button:hover {
+    background-color: #005bb5 !important;
+  }
+
+  button#chatbase-bubble-button svg {
+    fill: white !important;
+    width: 28px !important;
+    height: 28px !important;
+  }
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+
+
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+
+
+
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+        <script type="module" src="/src/main.jsx"></script>
+
+    <script>
+(function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="sBSlVH29SHCtezNUou6qe";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
+</script>
+
   </body>
 </html>

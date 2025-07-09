@@ -6,3 +6,5 @@ const AuthToken = axios.create({
       Authorization: `Bearer ${Token}`,
    },
 })
+
+export default AuthToken

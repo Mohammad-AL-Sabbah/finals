@@ -2,7 +2,9 @@ import React from 'react'
 
 function Error() {
   return (
-    <div>Error 404</div>
+    <div style={{width:"100%",height:"100vh",display:"flex",justifyContent:"center",alignItems:"center"}}>
+      <p style={{fontSize:"80px",fontWeight:"bold",color:"red"}}>Error 404</p> 
+      </div>
   )
 }
 

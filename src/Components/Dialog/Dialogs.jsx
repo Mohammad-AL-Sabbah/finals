@@ -11,8 +11,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ShareIcon from '@mui/icons-material/Share';
-import AddIcon from '@mui/icons-material/Add';
-import RemoveIcon from '@mui/icons-material/Remove';
+
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import { useTheme } from '@mui/material/styles';
 import { Heart } from 'react-feather';
@@ -21,6 +20,7 @@ import { ToastContainer, toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LoginIcon from '@mui/icons-material/Login';
 import { keyframes } from '@mui/system';
+import AddToCart from '../../Buttons/AddToCart/AddToCart';
 
 export default function ProductDialog({ open, handleClose, product }) {
   const theme = useTheme();
@@ -43,47 +43,59 @@ export default function ProductDialog({ open, handleClose, product }) {
     }
   };
 
-
-
-const handleBuyNow = () => {
-  const token = localStorage.getItem('Usertoken');
-  if (!token) {
-    toast.error(
-      <div style={{ textAlign: 'center' }}>
-        <div style={{ marginBottom: '0.5rem' }}>Please login first</div>
-        <Button
-          color="black"
-          size="small"
-          startIcon={<LoginIcon />}
-          onClick={() => {
-            toast.dismiss();
-            Navigate('/login');
-          }}
-          sx={{
-            textTransform: 'none',
-            fontWeight: 'bold',
-            fontSize: '0.8rem',
-          }}
-        >
-          press to Login
-        </Button>
-      </div>,
-      {
-        position: "top-center",
-        autoClose: 4000, 
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: "light",
-        transition: Bounce,
-      }
-    );
-  } else {
-    Navigate('/checkout');
-  }
-};
-
+  const handleBuyNow = () => {
+    const token = localStorage.getItem('Usertoken');
+    if (!token) {
+      toast.error(
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ marginBottom: '0.5rem' }}>Please login first</div>
+          <Button
+            color="black"
+            size="small"
+            startIcon={<LoginIcon />}
+            onClick={() => {
+              toast.dismiss();
+              Navigate('/login');
+            }}
+            sx={{
+              textTransform: 'none',
+              fontWeight: 'bold',
+              fontSize: '0.8rem',
+            }}
+          >
+            press to Login
+          </Button>
+        </div>,
+        {
+          position: "top-center",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "light",
+          transition: Bounce,
+        }
+      );
+    } else {
+        toast(
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ marginBottom: '0.5rem' , color:"red" }}>Something went wrong try add to cart </div>
+  
+        </div>,
+        {
+          position: "top-center",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "light",
+          transition: Bounce,
+        }
+      );
+    }
+  };
 
   const [userRating, setUserRating] = useState(product?.rating || 0);
   const [likedProducts, setLikedProducts] = useState([]);
@@ -123,13 +135,11 @@ const handleBuyNow = () => {
 
   const flexDirection = isMd ? 'column' : 'row-reverse';
 
-const flash = keyframes`
-  0% { transform: scale(1); box-shadow: 0 0 0 rgba(0, 0, 0, 0); }
-  50% { transform: scale(1.05); box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); }
-  100% { transform: scale(1); box-shadow: 0 0 0 rgba(0, 0, 0, 0); }
-`;
-
-
+  const flash = keyframes`
+    0% { transform: scale(1); box-shadow: 0 0 0 rgba(0, 0, 0, 0); }
+    50% { transform: scale(1.05); box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); }
+    100% { transform: scale(1); box-shadow: 0 0 0 rgba(0, 0, 0, 0); }
+  `;
 
   return (
     <>
@@ -267,28 +277,14 @@ const flash = keyframes`
 
               <Typography variant="body2" mb={2}>
                 {product.description} <br />
-                <p style={{ color: 'black', fontSize: '12px' }}>You can Zoom on the product </p>
+                <p style={{ color: '#388e3c', fontSize: '15px',fontWeight:"bold" }}>You can Zoom on the product </p>
               </Typography>
             </Box>
 
-            <Box
-              sx={{
-                width: 'fit-content',
-                border: '1px solid #ccc',
-                borderRadius: '24px',
-                padding: '4px 8px',
-              }}
-              display="flex"
-              alignItems="center"
-              gap={1}
-            >
-              <IconButton><AddIcon /></IconButton>
-              <Typography>1</Typography>
-              <IconButton><RemoveIcon /></IconButton>
-            </Box>
+        
 
-            <Box mt={2}>
-              <Typography fontSize="14px">in stock: {product.quantity} product</Typography>
+            <Box >
+              <Typography fontSize="14px">Avilable in stock: {product.quantity} Products</Typography>
             </Box>
 
             <Box sx={{ display: 'flex', alignItems: 'center', mb: '5px' }}>
@@ -308,39 +304,26 @@ const flash = keyframes`
             </Typography>
 
             <Box mt={1} mb={1} display="flex" gap={2} flexWrap="wrap">
-      <Button
-        variant="contained"
-        sx={{
-          flex: 1,
-          bgcolor: '#1976d2',
-          transition: 'all 0.3s ease',
-          '&:hover': {
-            bgcolor: '#1565c0',
-            animation: `${flash} 0.6s ease`,
-          },
-        }}
-      >
-        Add to Cart
-      </Button>
+              <AddToCart product={product} />
 
-      <Button
-        variant="contained"
-        onClick={handleBuyNow}
-        sx={{
-          flex: 1,
-          bgcolor: 'rgb(56, 142, 60)',
-          transition: 'all 0.3s ease',
-          '&:hover': {
-            bgcolor: '#2e7d32',
-            animation: `${flash} 0.6s ease`,
-          },
-        }}
-      >
-        Buy Now
-      </Button>
-    </Box>
+              <Button
+                variant="contained"
+                onClick={handleBuyNow}
+                sx={{
+                  flex: 1,
+                  bgcolor: 'rgb(56, 142, 60)',
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    bgcolor: '#2e7d32',
+                    animation: `${flash} 0.6s ease`,
+                  },
+                }}
+              >
+                Buy Now
+              </Button>
+            </Box>
 
-            <Box  display="flex" gap={1}>
+            <Box display="flex" gap={1}>
               <IconButton onClick={() => handleLike(product.id)}>
                 <Heart
                   color={likedProducts.includes(product.id) ? 'red' : 'gray'}

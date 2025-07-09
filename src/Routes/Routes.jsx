@@ -6,7 +6,12 @@ import CheckOut from '../Pages/CheckOut/CheckOut.jsx';
 import ProductsPage from './../Pages/ProductsPage/ProductsPage';
 import Login from '../Pages/Login/Login';
 import Register from '../Pages/Register/Register';
-
+import Cart from '../Pages/Cart/Cart';
+import ForgetPassword from '../Pages/ForgetBassword/ForgetBassword.jsx';
+import ForgetPasswordCode from '../Pages/ForgetPasswordCode/ForgetPasswordCode.jsx'
+import ProductById from '../Pages/ProductById/ProductById.jsx';
+import ProtectedRouter from '../Components/ProtectedRouter/ProtectedRouter.jsx';
+import UserProfile from '../Pages/UserProfile/UserProfile.jsx';
 const routes = createBrowserRouter([
     {
         path: '/',
@@ -20,21 +25,54 @@ const routes = createBrowserRouter([
             {
         path: '/checkout',
             element:
+            <ProtectedRouter>
             <CheckOut />  
+            </ProtectedRouter>
         },{
-        path: '/ProductsPage/:id',
+        path: '/productsPage/:id',
             element:
             <ProductsPage />
         },{
-        path: '/Login',
+        path: '/login',
             element:
             <Login />
         },{
-        path: '/Register',
+        path: '/register',
             element:
             <Register />
+        },{
+        path: '/cart',
+            element:
+            <ProtectedRouter>
+            <Cart />
+            </ProtectedRouter>
+        },
+        {
+        path: '/forget-password',
+            element:
+            <ForgetPassword />
+        },
+        {
+        path: '/forget-password-code',
+            element:
+            <ForgetPasswordCode />
         }
-        
+        ,
+        {
+       path:"/ProductById/:id/:name",
+            element:
+            <ProductById />
+        }
+        ,
+        {
+       path:"/UserProfile",
+            element:
+        <ProtectedRouter>
+            <UserProfile />
+
+        </ProtectedRouter>
+
+        }
         ]
     }
 
@@ -42,3 +80,5 @@ const routes = createBrowserRouter([
 ]);
 
 export default routes
+
+

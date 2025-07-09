@@ -4,6 +4,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import axios from "axios";
 import { FaChevronRight, FaChevronLeft } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 function ArrowButton({ direction, onClick }) {
   const isNext = direction === "next";
@@ -27,7 +28,7 @@ function ArrowButton({ direction, onClick }) {
         zIndex: 1000,
       }}
     >
-      {isNext ? <FaChevronRight size={20} /> : <FaChevronLeft size={20} />} 
+      {isNext ? <FaChevronRight size={20} /> : <FaChevronLeft size={20} />}
     </div>
   );
 }
@@ -107,7 +108,7 @@ function Category() {
           paddingBottom: "1.3rem",
         }}
       >
-      Shop by categories
+        Shop by categories
       </h2>
 
       {loading ? (
@@ -116,60 +117,64 @@ function Category() {
         <Slider {...settings}>
           {categories.map((item, index) => (
             <div key={index} style={{ padding: "0 10px" }}>
-              <div
-                style={{
-                  textAlign: "center",
-                  padding: "1rem",
-                  borderRadius: "12px",
-                  backgroundColor: "#fff",
-                  transition: "transform 0.3s",
-                  cursor: "pointer", 
-                }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.transform = "scale(1.05)")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.transform = "scale(1)")
-                }
+              <Link
+to={`/ProductById/${item.id}/${encodeURIComponent(item.name)}`}
+                
+                style={{ textDecoration: "none" }}
               >
                 <div
                   style={{
-                    width: "100px",
-                    height: "100px",
-                    margin: "auto",
-                    marginBottom: "1rem",
-                    borderRadius: "50%",
-                    backgroundColor: "#eee",
-                    backgroundImage: `url(${item.image})`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
+                    textAlign: "center",
+                    padding: "1rem",
+                    borderRadius: "12px",
+                    backgroundColor: "#fff",
+                    transition: "transform 0.3s",
+                    cursor: "pointer",
                   }}
-                />
-                <strong
-                  style={{
-                    display: "block",
-                    fontSize: "1rem",
-                    color: "#333",
-                    marginBottom: "0.3rem",
-                  }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.transform = "scale(1.05)")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.transform = "scale(1)")
+                  }
                 >
-                  {item.name}
-                </strong>
-                <p
-                  style={{
-                    fontSize: "0.8rem",
-                    color: "#777",
-                  }}
-                >
-                  {item.description}
-                </p>
-              </div>
+                  <div
+                    style={{
+                      width: "150px",
+                      height: "150px",
+                      margin: "auto",
+                      marginBottom: "1rem",
+                      borderRadius: "50%",
+                      backgroundColor: "#eee",
+                      backgroundImage: `url(https://www.nicepng.com/png/detail/2-23962_computer-png-transparent-background-computer-transparent.png)`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                    }}
+                  />
+                  <strong
+                    style={{
+                      display: "block",
+                      fontSize: "1rem",
+                      color: "#333",
+                      marginBottom: "0.3rem",
+                    }}
+                  >
+                    {item.name}
+                  </strong>
+                  <p
+                    style={{
+                      fontSize: "0.8rem",
+                      color: "#777",
+                    }}
+                  >
+                    {item.description}
+                  </p>
+                </div>
+              </Link>
             </div>
           ))}
         </Slider>
       )}
-            
-
     </div>
   );
 }
