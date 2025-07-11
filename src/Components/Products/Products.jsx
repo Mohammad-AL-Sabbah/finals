@@ -14,9 +14,10 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Heart } from 'react-feather';
 import ProductDetailsModal from '../Dialog/Dialogs';
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import Loader from '../Loader/Loader';
 
 function Products() {
-  const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [open, setOpen] = useState(false);
   const [likedProducts, setLikedProducts] = useState([]);
@@ -25,17 +26,22 @@ function Products() {
   const navigate = useNavigate();
 
   const getProduct = async () => {
-    try {
-      const { data } = await axios.get(`https://mytshop.runasp.net/api/products`);
-      setProducts(data.data);
-    } catch (error) {
-      console.error('Failed to fetch products', error);
-    }
+    const {data} = await axios.get(`${import.meta.env.VITE_BASE_URL}/products`);
+    console.log(data);
+    return data.data
   };
+ const {data, isLoading, isError, error} = useQuery({
+   queryKey: ['products'],
+   queryFn: getProduct,
+   staleTime: 6*60*60*1000,
+       refetchOnWindowFocus: false,
+    retry:3,
 
-  useEffect(() => {
-    getProduct();
-  }, []);
+ });
+
+  if (isError) return <p>error is :{error.message}</p>
+  if (isLoading) return <Loader />
+
 
   const handleOpen = (product) => {
     setSelectedProduct(product);
@@ -91,10 +97,10 @@ function Products() {
           gap: 2,
         }}
       >
-        {products.map((product) => (
+        {data.map((product) => (
           <Card
             key={product.id}
-            onClick={() => navigate(`/ProductsPage/${product.id}`,{ viewTransition: true })}
+            onClick={() => navigate(`/ProductsPage/${product.id}`,)}
             
             elevation={0}
             sx={(theme) => ({

@@ -22,6 +22,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import GoogleIcon from '@mui/icons-material/Google';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import EmailIcon from '@mui/icons-material/Email';
+import { useMutation } from '@tanstack/react-query'; // ✅ استدعاء useMutation
+
+import AuthToken from '../../Api/ApiAuthToken';
 
 function Login() {
   const { register, handleSubmit } = useForm();
@@ -32,28 +35,49 @@ function Login() {
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event) => event.preventDefault();
 
-  const LoginUser = async (data) => {
+  // ✅ تحديث السلة بعد تسجيل الدخول
+  const refreshCartItems = async () => {
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/Account/Login`, data);
-      localStorage.setItem('Usertoken', response.data.token);
-      if (response.status === 200) {
-        toast.success('Login successful!', { autoClose: 2000, position: 'top-center', theme: 'colored' });
-        setTimeout(() => navigate('/', { replace: true }), 2000);
-      }
+      const { data } = await AuthToken.get('/Carts');
     } catch (error) {
-      toast.error('Login failed. Please check your credentials.', { autoClose: 2000, position: 'top-center', theme: 'colored' });
+      console.error('Failed to refresh cart items:', error);
     }
   };
-const title  = document.getElementById('title');
-  if (title) title.innerHTML = 'Login page';
-  return (
-    <Box sx={{
-      display: 'flex',
-      height: '100vh',
-      flexDirection: { xs: 'column', md: 'row' },
-      overflow: 'hidden'
-    }}>
 
+  // ✅ mutation لتسجيل الدخول
+  const loginMutation = useMutation({
+    mutationFn: async (data) => {
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/Account/Login`, data);
+      localStorage.setItem('Usertoken', response.data.token);
+      return response;
+    },
+    onSuccess: async (response) => {
+      if (response.status === 200) {
+        toast.success('Login successful!', {
+          autoClose: 2000,
+          position: 'top-center',
+          theme: 'colored',
+        });
+
+        await refreshCartItems();
+
+        setTimeout(() => navigate('/', { replace: true }), 2000);
+      }
+    },
+    onError: () => {
+      toast.error('Login failed. Please check your credentials.', {
+        autoClose: 2000,
+        position: 'top-center',
+        theme: 'colored',
+      });
+    },
+  });
+
+  const title = document.getElementById('title');
+  if (title) title.innerHTML = 'Login page';
+
+  return (
+    <Box sx={{ display: 'flex', height: '100vh', flexDirection: { xs: 'column', md: 'row' }, overflow: 'hidden' }}>
       <Box
         sx={{
           flex: 1,
@@ -64,10 +88,9 @@ const title  = document.getElementById('title');
           minHeight: { md: '100vh', lg: '100%' },
         }}
       />
-
       <Box
         component="form"
-        onSubmit={handleSubmit(LoginUser)}
+        onSubmit={handleSubmit((data) => loginMutation.mutate(data))} // ✅ استخدام mutation هنا
         sx={{
           flex: 1,
           display: 'flex',
@@ -85,29 +108,18 @@ const title  = document.getElementById('title');
         <Typography variant='h4' fontWeight='bold' textAlign='center'>Login here</Typography>
         <Typography variant='body1' color='text.secondary' textAlign='center'>Good to see you again!</Typography>
 
-        {/* Social Buttons */}
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mt: 2, justifyContent: 'center' }}>
           <Button variant='outlined' startIcon={<GoogleIcon />} color='error'>Google</Button>
           <Button variant='outlined' startIcon={<FacebookIcon />} color='primary'>Facebook</Button>
           <Button variant='outlined' startIcon={<EmailIcon />} color='secondary'>Yahoo</Button>
         </Box>
 
-        {/* Divider with OR */}
         <Box sx={{ width: '100%', maxWidth: 400, my: 2 }}>
           <Divider><Typography variant='caption'>or</Typography></Divider>
         </Box>
 
-        {/* Email Input */}
-        <TextField
-          {...register('email')}
-          label='Email'
-          type='email'
-          required
-          fullWidth
-          sx={{ maxWidth: 400 }}
-        />
+        <TextField {...register('email')} label='Email' type='email' required fullWidth sx={{ maxWidth: 400 }} />
 
-        {/* Password Input */}
         <FormControl fullWidth variant="outlined" required sx={{ maxWidth: 400 }}>
           <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
           <OutlinedInput
@@ -116,11 +128,7 @@ const title  = document.getElementById('title');
             type={showPassword ? 'text' : 'password'}
             endAdornment={
               <InputAdornment position="end">
-                <IconButton
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                  edge="end"
-                >
+                <IconButton onClick={handleClickShowPassword} onMouseDown={handleMouseDownPassword} edge="end">
                   {showPassword ? <VisibilityOff /> : <Visibility />}
                 </IconButton>
               </InputAdornment>
@@ -129,24 +137,16 @@ const title  = document.getElementById('title');
           />
         </FormControl>
 
-        {/* Forgot Password Link */}
         <Box sx={{ width: '100%', maxWidth: 400, textAlign: 'right' }}>
           <Link to="/forget-password" style={{ fontSize: '0.85rem', textDecoration: 'underline', color: theme.palette.primary.main }}>
             Forgot password?
           </Link>
         </Box>
 
-        {/* Login Button */}
-        <Button
-          type='submit'
-          variant='contained'
-          fullWidth
-          sx={{ maxWidth: 400, mt: 1 }}
-        >
+        <Button type='submit' variant='contained' fullWidth sx={{ maxWidth: 400, mt: 1 }}>
           Login
         </Button>
 
-        {/* Additional Links */}
         <Box sx={{ textAlign: 'center', mt: 2 }}>
           <Link to="/Register" style={{ fontSize: '0.85rem', display: 'block', textDecoration: 'underline', color: theme.palette.primary.main }}>
             Don't have an account? Register here
@@ -155,7 +155,6 @@ const title  = document.getElementById('title');
             Back to Guest page
           </Link>
         </Box>
-
       </Box>
 
       <ToastContainer />

@@ -1,26 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   Box, Typography, Divider, Avatar, useTheme
 } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 import AuthToken from '../../Api/ApiAuthToken';
 import dayjs from 'dayjs';
 
+function fetchUser() {
+  return AuthToken.get('/Account/userinfo').then(res => res.data);
+}
+
 function Info() {
-  const [user, setUser] = useState(null);
   const theme = useTheme();
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const { data } = await AuthToken.get('/Account/userinfo');
-        setUser(data);
-      } catch (err) {
-        console.error('Error:', err);
-      }
-    })();
-  }, []);
+const { data: user, isLoading, isError, error } = useQuery({
+  queryKey: ['userinfo'],
+  queryFn: fetchUser,
+    retry:3
 
-  if (!user) {
+});
+
+  if (isLoading) {
     return (
       <Box sx={{
         minHeight: '70vh',
@@ -31,17 +31,27 @@ function Info() {
     );
   }
 
+  if (isError) {
+    return (
+      <Box sx={{
+        minHeight: '70vh',
+        display: 'flex', justifyContent: 'center', alignItems: 'center'
+      }}>
+        <Typography variant="h6" color="error">Error: {error.message || 'Failed to load user info'}</Typography>
+      </Box>
+    );
+  }
+
   const title = document.getElementById('title');
   if (title) title.innerHTML = 'Profile info';
+
   return (
     <Box sx={{
-     
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
       p: 2,
-  
     }}>
       <Box sx={{
         width: '100%',
@@ -103,20 +113,14 @@ function Info() {
               value={dayjs(user.birthOfDate).format('DD MMM YYYY')}
             />
           </Box>
-
-
-          
-    
         </Box>
       </Box>
-            <Box sx={{ mt: 4, textAlign: 'left',display: 'flex',justifyContent: 'center',alignItems: 'center',gap: 10}}>
-          
-            <LabeledLine label="First Name" value={user.firstName} />
-            <LabeledLine label="Last Name" value={user.lastName} />
-            <LabeledLine label="Username" value={user.userName} />
-          </Box>
+      <Box sx={{ mt: 4, textAlign: 'left', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 10 }}>
+        <LabeledLine label="First Name" value={user.firstName} />
+        <LabeledLine label="Last Name" value={user.lastName} />
+        <LabeledLine label="Username" value={user.userName} />
+      </Box>
     </Box>
-    
   );
 }
 
@@ -131,8 +135,8 @@ function InfoItem({ label, value }) {
 
 function LabeledLine({ label, value }) {
   return (
-    <Box sx={{ display: 'flex', gap: 1, mb: 1,border: '1px solid #1976d2',padding: 1,borderRadius: 2,justifyContent: 'center',alignItems: 'center',backgroundColor: '#1976d2' }}>
-      <Typography variant="body1" fontWeight="500" color="white" >{label}:</Typography>
+    <Box sx={{ display: 'flex', gap: 1, mb: 1, border: '1px solid #1976d2', padding: 1, borderRadius: 2, justifyContent: 'center', alignItems: 'center', backgroundColor: '#1976d2' }}>
+      <Typography variant="body1" fontWeight="500" color="white">{label}:</Typography>
       <Typography variant="body1" fontWeight="500" color="white">{value}</Typography>
     </Box>
   );

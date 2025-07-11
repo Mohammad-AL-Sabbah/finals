@@ -12,6 +12,8 @@ import ForgetPasswordCode from '../Pages/ForgetPasswordCode/ForgetPasswordCode.j
 import ProductById from '../Pages/ProductById/ProductById.jsx';
 import ProtectedRouter from '../Components/ProtectedRouter/ProtectedRouter.jsx';
 import UserProfile from '../Pages/UserProfile/UserProfile.jsx';
+import AllProducts from '../Pages/AllProducts/AllProducts.jsx'
+import AboutUs from '../Pages/AboutUs/AboutUs.jsx'
 
 const routes = createBrowserRouter([
     {
@@ -93,7 +95,19 @@ const routes = createBrowserRouter([
                     viewTransition:true
 
 
+        },
+        {
+        path:"/all-products",
+            element:
+            <AllProducts />,
+        },
+        
+        {
+        path:"/about-us",
+            element:
+            <AboutUs />,
         }
+        
         ]
     }
 

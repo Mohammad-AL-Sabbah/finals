@@ -1,77 +1,41 @@
 import * as React from 'react';
 import {
   AppBar, Box, Toolbar, IconButton, Typography, Menu, MenuItem,
-  Container, Button, Avatar
+  Container, Button, Avatar, Badge
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import { styled, alpha, useTheme } from '@mui/material/styles';
-import InputBase from '@mui/material/InputBase';
-import SearchIcon from '@mui/icons-material/Search';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { useTheme } from '@mui/material/styles';
 import { Link, useNavigate } from 'react-router-dom';
-import { CartContext } from '../../Context/CartContext';
-import { useContext } from 'react';
+import AuthToken from '../../Api/ApiAuthToken';
+import { useQuery } from '@tanstack/react-query';
 
 const pagesGuest = ['Register', 'Login'];
-const pagesAuth = ['Cart', 'About US'];
+const pagesAuth = ['Cart', 'All Products','About Us'];
 
 const accentColor = '#00bcd4';
 
-const Search = styled('div')(({ theme }) => ({
-  position: 'relative',
-  borderRadius: 25,
-  backgroundColor: alpha(theme.palette.common.white, 0.1),
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
-  },
-  width: '100%',
-  maxWidth: 550,
-  [theme.breakpoints.down('md')]: {
-    display: 'none',
-  },
-  transition: 'box-shadow 0.3s ease-in-out',
-}));
-
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 1),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  color: 'white',
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
-  width: '100%',
-  fontSize: '1rem',
-  '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    width: '100%',
-    borderRadius: 25,
-    transition: theme.transitions.create(['background-color', 'border-radius'], {
-      duration: 300,
-    }),
-    '&::placeholder': {
-      color: '#e0e0e0',
-      opacity: 1,
-    },
-    '&:focus': {
-      backgroundColor: alpha(theme.palette.common.white, 0.15),
-      borderRadius: 25,
-    },
-  },
-}));
-
 function Navbar() {
+  const navigate = useNavigate();
+  const theme = useTheme();
+
+  // جلب بيانات السلة
+  const fetchCartItems = async () => {
+    const { data } = await AuthToken.get(`/Carts`);
+    return data;
+  };
+
+  const { data } = useQuery({
+    queryKey: ['cartItems'],
+    queryFn: fetchCartItems,
+    staleTime: 1000,
+  });
+
+  const cartItemsCount = data?.cartResponse?.length || 0;
+
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const isLoggedIn = Boolean(localStorage.getItem('Usertoken'));
-  const navigate = useNavigate();
-  const { cartItems } = useContext(CartContext);
-  const theme = useTheme();
 
   const handleOpenNavMenu = (event) => setAnchorElNav(event.currentTarget);
   const handleCloseNavMenu = () => setAnchorElNav(null);
@@ -85,66 +49,71 @@ function Navbar() {
   };
 
   const leftPages = isLoggedIn ? pagesAuth : pagesGuest;
-  const toPath = (page) => '/' + page.toLowerCase().replace(/\s+/g, '-');
+  
 
-  // التدرج حسب الوضع (light / dark)
-  const navbarBackground = theme.palette.mode === 'dark'
-    ? 'linear-gradient(90deg, #121212, #1976d2, #2c5364)' // لون أغمق للوضع الداكن
-    : 'linear-gradient(90deg, rgb(68, 153, 190), #1976d2, #2c5364)'; // اللون الأصلي للوضع الفاتح
+  const toPath = (page) => {
+  if (page.toLowerCase() === 'home') return '/';
+  if(page.toLowerCase() === 'about us') return '/about-us';
+  return '/' + page.toLowerCase().replace(/\s+/g, '-');
+};
+
+  const navbarBackground =
+    theme.palette.mode === 'dark'
+      ? 'linear-gradient(90deg, #121212, #1976d2, #2c5364)'
+      : 'linear-gradient(90deg, rgb(68, 153, 190), #1976d2, #2c5364)';
 
   return (
-    <AppBar
-      position="static"
-      sx={{
-        background: navbarBackground,
-        color: 'white',
-      }}
-    >
+    <AppBar position="static" sx={{ background: navbarBackground, color: 'white' }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters sx={{ justifyContent: 'space-between' }}>
           {/* موبايل */}
-          <Box sx={{ display: { xs: 'flex', md: 'none' }, alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+          <Box
+            sx={{
+              display: { xs: 'flex', md: 'none' },
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              width: '100%',
+            }}
+          >
             <IconButton size="large" onClick={handleOpenNavMenu} color="inherit">
               <MenuIcon />
             </IconButton>
 
             <Link to="/" style={{ textDecoration: 'none' }}>
-              <Typography sx={{ fontSize: '20px', fontWeight: 'bold', color: 'white' }}>ElecTech</Typography>
+              <Typography sx={{ fontSize: 20, fontWeight: 'bold', color: 'white' }}>ElecTech</Typography>
             </Link>
 
             {isLoggedIn && (
-              <>
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar
-                    sx={{
-                      width: 32,
-                      height: 32,
-                      bgcolor: 'white',
-                      color: 'black',
-                      fontSize: '0.8rem',
-                      '&:hover': {
-                        boxShadow: '0 0 8px rgba(255, 255, 255, 0.6)',
-                        transition: 'box-shadow 0.3s ease-in-out',
-                      },
-                    }}
-                  />
-                </IconButton>
-                <Menu
-                  anchorEl={anchorElUser}
-                  open={Boolean(anchorElUser)}
-                  onClose={handleCloseUserMenu}
-                  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                  transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                >
-                  <MenuItem onClick={handleCloseUserMenu} component={Link} to="/UserProfile">
-                    <Typography textAlign="center">Profile</Typography>
-                  </MenuItem>
-                  <MenuItem onClick={handleLogout}>
-                    <Typography textAlign="center">Logout</Typography>
-                  </MenuItem>
-                </Menu>
-              </>
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                <Avatar
+                  sx={{
+                    width: 32,
+                    height: 32,
+                    bgcolor: 'white',
+                    color: 'black',
+                    fontSize: '0.8rem',
+                    '&:hover': {
+                      boxShadow: '0 0 8px rgba(255, 255, 255, 0.6)',
+                      transition: 'box-shadow 0.3s ease-in-out',
+                    },
+                  }}
+                />
+              </IconButton>
             )}
+            <Menu
+              anchorEl={anchorElUser}
+              open={Boolean(anchorElUser)}
+              onClose={handleCloseUserMenu}
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+              transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+            >
+              <MenuItem onClick={handleCloseUserMenu} component={Link} to="/UserProfile">
+                <Typography textAlign="center">Profile</Typography>
+              </MenuItem>
+              <MenuItem onClick={handleLogout}>
+                <Typography textAlign="center">Logout</Typography>
+              </MenuItem>
+            </Menu>
           </Box>
 
           {/* قائمة الموبايل */}
@@ -159,7 +128,16 @@ function Navbar() {
             {leftPages.map((page) => (
               <MenuItem key={page} onClick={handleCloseNavMenu} component={Link} to={toPath(page)}>
                 <Typography textAlign="center">
-                  {page === 'Cart' ? `Cart (${cartItems})` : page}
+                  {page === 'Cart' ? (
+                    <>
+                      <Badge badgeContent={cartItemsCount} color="error" sx={{ mr: 1 }}>
+                        <ShoppingCartIcon />
+                      </Badge>
+                      Cart
+                    </>
+                  ) : (
+                    page
+                  )}
                 </Typography>
               </MenuItem>
             ))}
@@ -172,13 +150,8 @@ function Navbar() {
 
           {/* ديسكتوب */}
           <Box sx={{ display: { xs: 'none', md: 'flex' }, flexGrow: 1, alignItems: 'center' }}>
-            {/* يسار: لوجو وروابط */}
+            {/* يسار: روابط الصفحات */}
             <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-              <Box sx={{ mr: 2 }}>
-                <Link to="/" style={{ textDecoration: 'none' }}>
-                  <Typography sx={{ fontSize: '20px', fontWeight: 'bold', color: 'white' }}>ElecTech</Typography>
-                </Link>
-              </Box>
               {leftPages.map((page) => (
                 <Button
                   key={page}
@@ -194,25 +167,38 @@ function Navbar() {
                       boxShadow: `inset 0 -2px 0 0 ${accentColor}`,
                       transition: 'all 0.3s ease-in-out',
                     },
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 0.5,
                   }}
                 >
-                  {page === 'Cart' ? `Cart (${cartItems})` : page}
+                  {page === 'Cart' ? (
+                    <Badge badgeContent={cartItemsCount} color="error">
+                      <ShoppingCartIcon />
+                    </Badge>
+                  ) : (
+                    page
+                  )}
                 </Button>
               ))}
             </Box>
 
-            {/* وسط: حقل البحث */}
             <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center' }}>
-              <Search>
-                <SearchIconWrapper>
-                  <SearchIcon />
-                </SearchIconWrapper>
-                <StyledInputBase placeholder="Search…" inputProps={{ 'aria-label': 'search' }} />
-              </Search>
+              <Link to="/" style={{ textDecoration: 'none' }}>
+                <Typography sx={{ fontSize: 35, fontWeight: 'bold', color: 'white' }}>ElecTech</Typography>
+              </Link>
             </Box>
 
-            {/* يمين: روابط وأفاتار */}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            {/* يمين: أيقونة البروفايل مع عرض ثابت فقط في الديسكتوب */}
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1,
+                width: { xs: 'auto', md: '200px' },
+                justifyContent: 'flex-end',
+              }}
+            >
               {isLoggedIn && (
                 <>
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -235,7 +221,7 @@ function Navbar() {
                     open={Boolean(anchorElUser)}
                     onClose={handleCloseUserMenu}
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                    transformOrigin={{ vertical: 'top', horizontal: 'right' }} 
+                    transformOrigin={{ vertical: 'top', horizontal: 'right' }}
                   >
                     <MenuItem onClick={handleCloseUserMenu} component={Link} to="/UserProfile">
                       <Typography textAlign="center">Profile</Typography>

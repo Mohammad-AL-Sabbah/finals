@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import axios from "axios";
 import { FaChevronRight, FaChevronLeft } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+import Loader from '../Loader/Loader';
 
 function ArrowButton({ direction, onClick }) {
   const isNext = direction === "next";
@@ -34,25 +35,22 @@ function ArrowButton({ direction, onClick }) {
 }
 
 function Category() {
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const getCategories = async () => {
-    try {
-      const { data } = await axios.get(
-        `${import.meta.env.VITE_BASE_URL}/categories`
-      );
-      setCategories(data);
-      setLoading(false);
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-      setLoading(false);
-    }
+  const fetchData = async () => {
+    const { data } = await axios.get(`${import.meta.env.VITE_BASE_URL}/categories`);
+    return data;
   };
 
-  useEffect(() => {
-    getCategories();
-  }, []);
+  const {data,isLoading,isError,error} = useQuery({
+    queryKey: ['categories'],
+    queryFn: fetchData,
+    staleTime: 6*60*60*1000,
+    refetchOnWindowFocus: false,
+    retry:3,
+
+  });
+  if(isError)return <p>error is :{error.message}</p>
+  if(isLoading)return <Loader />
+
 
   const settings = {
     rtl: true,
@@ -111,67 +109,65 @@ function Category() {
         Shop by categories
       </h2>
 
-      {loading ? (
-        <p style={{ textAlign: "center" }}>جاري التحميل...</p>
-      ) : (
-        <Slider {...settings}>
-          {categories.map((item, index) => (
-            <div key={index} style={{ padding: "0 10px" }}>
-              <Link
-to={`/ProductById/${item.id}/${encodeURIComponent(item.name)}`}style={{ textDecoration: "none" }}>
+      <Slider {...settings}>
+        {data.map((item, index) => (
+          <div key={index} style={{ padding: "0 10px" }}>
+            <Link
+              to={`/ProductById/${item.id}/${encodeURIComponent(item.name)}`}
+              style={{ textDecoration: "none" }}
+            >
+              <div
+                style={{
+                  textAlign: "center",
+                  padding: "1rem",
+                  borderRadius: "12px",
+                  backgroundColor: "#fff",
+                  transition: "transform 0.3s",
+                  cursor: "pointer",
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.transform = "scale(1.05)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.transform = "scale(1)")
+                }
+              >
                 <div
                   style={{
-                    textAlign: "center",
-                    padding: "1rem",
-                    borderRadius: "12px",
-                    backgroundColor: "#fff",
-                    transition: "transform 0.3s",
-                    cursor: "pointer",
+                    width: "150px",
+                    height: "150px",
+                    margin: "auto",
+                    marginBottom: "1rem",
+                    borderRadius: "50%",
+                    backgroundColor: "#eee",
+                    backgroundImage: `url(https://www.nicepng.com/png/detail/2-23962_computer-png-transparent-background-computer-transparent.png)`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
                   }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.transform = "scale(1.05)")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.transform = "scale(1)")
-                  }
+                />
+                <strong
+                  style={{
+                    display: "block",
+                    fontSize: "1rem",
+                    color: "#333",
+                    marginBottom: "0.3rem",
+                  }}
                 >
-                  <div
-                    style={{
-                      width: "150px",
-                      height: "150px",
-                      margin: "auto",
-                      marginBottom: "1rem",
-                      borderRadius: "50%",
-                      backgroundColor: "#eee",
-                      backgroundImage: `url(https://www.nicepng.com/png/detail/2-23962_computer-png-transparent-background-computer-transparent.png)`,
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                    }}
-                  />
-                  <strong
-                    style={{
-                      display: "block",
-                      fontSize: "1rem",
-                      color: "#333",
-                      marginBottom: "0.3rem",
-                    }}
-                  >
-                    {item.name}
-                  </strong>
-                  <p
-                    style={{
-                      fontSize: "0.8rem",
-                      color: "#777",
-                    }}
-                  >
-                    {item.description}
-                  </p>
-                </div>
-              </Link>
-            </div>
-          ))}
-        </Slider>
-      )}
+                  {item.name}
+                </strong>
+                <p
+                  style={{
+                    fontSize: "0.8rem",
+                    color: "#777",
+                  }}
+                >
+                  {item.description}
+                </p>
+              </div>
+            </Link>
+          </div>
+        ))}
+      </Slider>
     </div>
   );
 }

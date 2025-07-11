@@ -12,22 +12,16 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import  AuthToken  from "../../Api/ApiAuthToken"
+import { useMutation } from "@tanstack/react-query";
+import AuthToken from "../../Api/ApiAuthToken";
 
-const ChangePassword = async (oldPassword, newPassword, confirmNewPassword) => {
-  try {
-    const response = await AuthToken.patch('/Account/ChangePassword', {
-      OldPassword: oldPassword,
-      NewPassword: newPassword,
-      ConfirmNewPassword: confirmNewPassword,
-    });
-    return response.data;
-  } catch (error) {
-    if (error.response) {
-      throw new Error(error.response.data.message || 'Failed to change password');
-    }
-    throw new Error(error.message);
-  }
+const changePassword = async ({ oldPassword, newPassword, confirmNewPassword }) => {
+  const response = await AuthToken.patch('/Account/ChangePassword', {
+    OldPassword: oldPassword,
+    NewPassword: newPassword,
+    ConfirmNewPassword: confirmNewPassword,
+  });
+  return response.data;
 };
 
 const ChangePasswordForm = () => {
@@ -39,6 +33,7 @@ const ChangePasswordForm = () => {
     handleSubmit,
     watch,
     formState: { errors, isSubmitting },
+    reset,
   } = useForm();
 
   const newPassword = watch("newPassword");
@@ -53,31 +48,36 @@ const ChangePasswordForm = () => {
   const toggleShowNew = () => setShowNew((s) => !s);
   const toggleShowConfirm = () => setShowConfirm((s) => !s);
 
-  const onSubmit = async (data) => {
+  const mutation = useMutation({
+    mutationFn: changePassword,
+    onSuccess: () => {
+      setSuccessMsg("Password changed successfully!");
+      setServerError(null);
+      reset();
+    },
+    onError: (error) => {
+      setServerError(error.message || "Failed to change password");
+      setSuccessMsg(null);
+    },
+  });
+
+  const onSubmit = (data) => {
     setServerError(null);
     setSuccessMsg(null);
-    try {
-      await ChangePassword(
-        data.oldPassword,
-        data.newPassword,
-        data.confirmNewPassword
-      );
-      setSuccessMsg("Password changed successfully!");
-    } catch (err) {
-      setServerError(err.message);
-    }
+    mutation.mutate({
+      oldPassword: data.oldPassword,
+      newPassword: data.newPassword,
+      confirmNewPassword: data.confirmNewPassword,
+    });
   };
-  const title = document.getElementById('title');
-if (title) title.innerHTML = 'Change Password';
 
   return (
     <Box
       sx={{
         minHeight: "440px",
-        bgcolor: "#fff",  // خلفية الصفحة بيضاء
+        bgcolor: "#fff",
         display: "flex",
         justifyContent: "center",
-    
         p: 2,
       }}
     >
@@ -86,10 +86,10 @@ if (title) title.innerHTML = 'Change Password';
         onSubmit={handleSubmit(onSubmit)}
         sx={{
           width: isSmallScreen ? "90%" : 420,
-          bgcolor: "#fff", // خلفية الفورم بيضاء ناصعة
+          bgcolor: "#fff",
           p: { xs: 3, sm: 5 },
           borderRadius: 4,
-          boxShadow: "0 8px 30px rgba(0,0,0,0.1)", // ظل ناعم وراقي
+          boxShadow: "0 8px 30px rgba(0,0,0,0.1)",
           transition: "box-shadow 0.3s ease",
           "&:hover": {
             boxShadow: "0 12px 40px rgba(0,0,0,0.15)",
@@ -104,7 +104,7 @@ if (title) title.innerHTML = 'Change Password';
           textAlign="center"
           sx={{
             fontWeight: 600,
-            color: "#2C3E50", // لون نص داكن أنيق
+            color: "#2C3E50",
             letterSpacing: 1,
           }}
         >
@@ -229,7 +229,7 @@ if (title) title.innerHTML = 'Change Password';
           type="submit"
           variant="contained"
           fullWidth
-          disabled={isSubmitting}
+          disabled={mutation.isLoading}
           sx={{
             mt: 4,
             py: 1.7,
@@ -250,7 +250,7 @@ if (title) title.innerHTML = 'Change Password';
             },
           }}
         >
-          {isSubmitting ? "Changing..." : "Change Password"}
+          {mutation.isLoading ? "Changing..." : "Change Password"}
         </Button>
       </Box>
     </Box>

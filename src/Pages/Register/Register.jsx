@@ -22,6 +22,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import GoogleIcon from '@mui/icons-material/Google';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import EmailIcon from '@mui/icons-material/Email';
+import { useMutation } from '@tanstack/react-query'; // ✅ الاستدعاء
 
 function Register() {
   const { register, handleSubmit } = useForm();
@@ -32,17 +33,30 @@ function Register() {
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event) => event.preventDefault();
 
-  const registerUser = async (data) => {
-    try {
+  // ✅ mutation للتسجيل
+  const registerMutation = useMutation({
+    mutationFn: async (data) => {
       const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/Account/register`, data);
+      return response;
+    },
+    onSuccess: (response) => {
       if (response.status === 200) {
-        toast.success('Registration successful!', { autoClose: 2000, position: 'top-center', theme: 'colored' });
+        toast.success('Registration successful!', {
+          autoClose: 2000,
+          position: 'top-center',
+          theme: 'colored'
+        });
         setTimeout(() => navigate('/login'), 2000);
       }
-    } catch (error) {
-      toast.error('Registration failed. Please try again.', { autoClose: 2000, position: 'top-center', theme: 'colored' });
+    },
+    onError: () => {
+      toast.error('Registration failed. Please try again.', {
+        autoClose: 2000,
+        position: 'top-center',
+        theme: 'colored'
+      });
     }
-  };
+  });
 
   const title = document.getElementById('title');
   if (title) title.innerHTML = 'Register Page';
@@ -68,7 +82,7 @@ function Register() {
 
       <Box
         component="form"
-        onSubmit={handleSubmit(registerUser)}
+        onSubmit={handleSubmit((data) => registerMutation.mutate(data))} // ✅ استخدم useMutation هنا
         sx={{
           flex: 1,
           display: 'flex',
@@ -100,11 +114,7 @@ function Register() {
             label="Password"
             endAdornment={
               <InputAdornment position="end">
-                <IconButton
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                  edge="end"
-                >
+                <IconButton onClick={handleClickShowPassword} onMouseDown={handleMouseDownPassword} edge="end">
                   {showPassword ? <VisibilityOff /> : <Visibility />}
                 </IconButton>
               </InputAdornment>
@@ -121,11 +131,7 @@ function Register() {
             label="Confirm Password"
             endAdornment={
               <InputAdornment position="end">
-                <IconButton
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                  edge="end"
-                >
+                <IconButton onClick={handleClickShowPassword} onMouseDown={handleMouseDownPassword} edge="end">
                   {showPassword ? <VisibilityOff /> : <Visibility />}
                 </IconButton>
               </InputAdornment>
@@ -135,12 +141,7 @@ function Register() {
 
         <TextField {...register('birthOfDate')} type="date" label="Birthday" InputLabelProps={{ shrink: true }} required fullWidth sx={{ maxWidth: 400 }} />
 
-        <Button
-          type='submit'
-          variant='contained'
-          fullWidth
-          sx={{ maxWidth: 400, mt: 1 }}
-        >
+        <Button type='submit' variant='contained' fullWidth sx={{ maxWidth: 400, mt: 1 }}>
           Register
         </Button>
 
@@ -152,7 +153,6 @@ function Register() {
             Back to Guest page
           </Link>
         </Box>
-
       </Box>
 
       <ToastContainer />

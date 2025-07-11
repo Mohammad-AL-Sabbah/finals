@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   Box,
   Typography,
@@ -19,95 +19,86 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import AuthToken from '../../Api/ApiAuthToken';
 import Loader from '../../Components/Loader/Loader';
-import { Link } from 'react-router';
-import { CartContext } from '../../Context/CartContext';
-import React from 'react';
+import { Link } from 'react-router-dom';
+import { useQueryClient, useQuery } from '@tanstack/react-query';
+import Ads from '../../Components/AdsGlopal/Ads';
+import Products from '../../Components/Products/Products';
+
 
 function Cart() {
-  const [products, setProducts] = useState([]);
-  const [Isloading, setIsLoading] = useState(true);
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
-  const { cartItems, setCartItems } = React.useContext(CartContext);
+  const queryClient = useQueryClient();
 
-  const getProductById = async () => {
-    const { data } = await AuthToken.get(`/Carts`);
-    setProducts(data.cartResponse);
-    setIsLoading(false);
-  };
+  const { data, isLoading, isError, error, refetch } = useQuery({
+    queryKey: ['cartItems'],
+    queryFn: async () => {
+      const response = await AuthToken.get('/Carts');
+      return response.data;
+    },
+    staleTime: 0,
+  });
 
-  useEffect(() => {
-    getProductById();
-    document.title = 'Cart';
-  }, []);
+  if (isLoading) return <Loader />;
+  if (isError) return <h1>{error.message}</h1>;
 
   const incress = async (id) => {
     await AuthToken.patch(`/Carts/increaseCount/${id}`, {});
-    const updatedProducts = products.map((product) =>
-      product.id === id ? { ...product, count: product.count + 1 } : product
-    );
-    setProducts(updatedProducts);
+    queryClient.setQueryData(['cartItems'], (oldData) => {
+      const newCart = oldData.cartResponse.map((p) =>
+        p.id === id ? { ...p, count: p.count + 1 } : p
+      );
+      return { ...oldData, cartResponse: newCart };
+    });
   };
 
-const decress = async (id) => {
-  await AuthToken.patch(`/Carts/decreaseCount/${id}`, {});
-  const updatedProducts = products
-    .map((product) =>
-      product.id === id ? { ...product, count: product.count - 1 } : product
-    )
-    .filter((product) => product.count > 0);
+  const decress = async (id) => {
+    await AuthToken.patch(`/Carts/decreaseCount/${id}`, {});
+    refetch();
+  };
 
-  setProducts(updatedProducts);
+  const deleteItem = async (id) => {
+    await AuthToken.delete(`/Carts/${id}`);
+    queryClient.setQueryData(['cartItems'], (oldData) => {
+      const newCart = oldData.cartResponse.filter((item) => item.id !== id);
+      return { ...oldData, cartResponse: newCart };
+    });
+  };
 
-
-  if (updatedProducts.length === 0) {
-    setCartItems(0);
-  } else {
-    setCartItems(updatedProducts.length);
-  }
-};
-
-
-  const deleteItem = async (id)=>{
-    const response = await AuthToken.delete(`/Carts/${id}`);
-      setProducts(products.filter((product) => product.id !== id));
-      
-setCartItems(cartItems - 1);
-  }
   const deleteProduct = async (id) => {
     await AuthToken.delete(`/Carts/deleteProduct/${id}`);
-    setProducts(products.filter((product) => product.id !== id));
+    queryClient.setQueryData(['cartItems'], (oldData) => {
+      const newCart = oldData.cartResponse.filter((item) => item.id !== id);
+      return { ...oldData, cartResponse: newCart };
+    });
   };
 
   const clearCart = async () => {
     await AuthToken.delete(`/Carts/clearCart`);
-    setProducts([]);
+    queryClient.setQueryData(['cartItems'], (oldData) => ({
+      ...oldData,
+      cartResponse: [],
+    }));
   };
 
   const clearCartHandler = () => {
     setOpenConfirmDialog(true);
   };
 
-  const total = products.reduce((sum, item) => sum + item.price * item.count, 0);
+  const total = data.cartResponse.reduce((sum, item) => sum + item.price * item.count, 0);
 
-  if (Isloading) return <Loader />;
-
-  if (products.length === 0) {
+  if (data.cartResponse.length === 0) {
     return (
       <Box
         sx={{
           height: '100vh',
           p: 2,
           display: 'flex',
-          flexDirection: { xs: 'column', md: 'row' }
-
-          ,
+          flexDirection: { xs: 'column', md: 'row' },
         }}
       >
+        
         <Box sx={{ flex: 1, mr: { md: 3 }, mb: { xs: 3, md: 0 } }}>
-          <Typography
-            variant="h5"
-            sx={{ mb: 3, textAlign: 'center', fontWeight: 'bold' }}
-          >
+          <Typography variant="h5" sx={{ mb: 3, textAlign: 'center', fontWeight: 'bold' }}>
             Shopping Cart
           </Typography>
           <Box
@@ -147,11 +138,7 @@ setCartItems(cartItems - 1);
               {total}
             </Typography>
           </Typography>
-          <Typography
-            variant="subtitle1"
-            fontWeight="600"
-            sx={{ mb: 2, textAlign: { xs: 'center', md: 'left' } }}
-          >
+          <Typography variant="subtitle1" fontWeight="600" sx={{ mb: 2, textAlign: { xs: 'center', md: 'left' } }}>
             Delivery Fees
           </Typography>
           {[
@@ -169,17 +156,23 @@ setCartItems(cartItems - 1);
           <Typography variant="body2" sx={{ color: 'green', ml: 1, fontSize: 18 }}>
             Free delivery for orders above $100!
           </Typography>
+          
+
         </Box>
       </Box>
     );
   }
 
+  const title = document.getElementById('title');
+  if (title) title.innerHTML = 'Cart';
+
   return (
+    <Box>
+
+   
     <Box sx={{ p: 2, display: 'flex', flexDirection: { xs: 'column', md: 'row' } }}>
-      <Box sx={{ flex: 1, mr: { md: 3 }, mb: { xs: 3, md: 0 } }}>
-        <Typography variant="h5" sx={{ mb: 3, textAlign: 'center', fontWeight: 'bold' }}>
-          Shopping Cart
-        </Typography>
+      <Box sx={{ flex: 1, mr: { md: 3 }, mb: { xs: 3, md: 0 },mt:4 }}>
+        
 
         <Box
           sx={{
@@ -190,12 +183,12 @@ setCartItems(cartItems - 1);
             justifyContent: 'space-evenly',
           }}
         >
-          <Box sx={{ width: '30%', textAlign: 'center' }}>PRODUCT</Box>
-          <Box sx={{ width: '20%', textAlign: 'center' }}>PRICE</Box>
+          <Box sx={{ width: '34%', textAlign: 'center' }}>PRODUCT</Box>
+          <Box sx={{ width: '24%', textAlign: 'center' }}>PRICE</Box>
           <Box sx={{ width: '30%', textAlign: 'center' }}>QUANTITY</Box>
         </Box>
 
-        {products.map((item) => (
+        {data.cartResponse.map((item) => (
           <Card key={item.id} sx={{ mb: 2 }}>
             <CardContent>
               <Box
@@ -209,24 +202,22 @@ setCartItems(cartItems - 1);
               >
                 <Box
                   sx={{
-                    width: { md: '30%', xs: '100%' },
+                    width: { md: '34%', xs: '100%' },
                     display: 'flex',
                     gap: 2,
                     alignItems: 'center',
                   }}
                 >
                   <img
-                    src="https://placehold.co/600x400"
+                    src="https://www.ubuy.com.ps/productimg/?image=aHR0cHM6Ly9tLm1lZGlhLWFtYXpvbi5jb20vaW1hZ2VzL0kvNTFXZ1dVYXk3Q0wuX1NTNDAwXy5qcGc.jpg"
                     alt={item.name}
                     width="150"
                     height="150"
                     style={{ borderRadius: '8px' }}
                   />
                   <Box>
-                    <Typography fontWeight="bold">{item.name}</Typography>
-                    <Typography variant="body2">
-                      description: {item.description}
-                    </Typography>
+                    <Typography fontWeight="bold" sx={{fontSize: { xs: '0.8rem', md: '0.9rem',width:'100%' }}}>{item.name}</Typography>
+                    <Typography variant="body2">description: {item.description}</Typography>
                   </Box>
                 </Box>
 
@@ -250,7 +241,7 @@ setCartItems(cartItems - 1);
                   <IconButton size="small" color="primary" onClick={() => incress(item.id)}>
                     <AddIcon />
                   </IconButton>
-                  <IconButton size="small" color="error" onClick={() => deleteItem(item.id)} >
+                  <IconButton size="small" color="error" onClick={() => deleteItem(item.id)}>
                     <DeleteIcon />
                   </IconButton>
                 </Box>
@@ -260,21 +251,12 @@ setCartItems(cartItems - 1);
         ))}
 
         <Divider sx={{ my: 4 }} />
-        <Button
-          sx={{ fontWeight: 'bold' }}
-          onClick={clearCartHandler}
-          variant="contained"
-          color="error"
-          size="large"
-          fullWidth
-        >
-          Clear Cart
-        </Button>
+  
       </Box>
 
       <Box
         sx={{
-          width: { xs: '100%', md: 320 },
+          width: { xs: '100%', md: 500 },
           height: { xs: 'auto', md: '90vh' },
           backgroundColor: '#fafafa',
           borderRadius: 2,
@@ -284,8 +266,6 @@ setCartItems(cartItems - 1);
           top: { md: 16 },
           alignSelf: { md: 'flex-start' },
           overflowY: 'auto',
-          fontFamily: 'Arial, sans-serif',
-          color: '#333',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
@@ -293,28 +273,16 @@ setCartItems(cartItems - 1);
         }}
       >
         <Box>
-          <Typography
-            variant="h6"
-            fontWeight="700"
-            sx={{
-              borderBottom: '2px solid #1976d2',
-              pb: 1,
-              mb: 3,
-              textAlign: { xs: 'center', md: 'left' },
-            }}
-          >
+          <Typography variant="h6" fontWeight="700" sx={{ borderBottom: '2px solid #1976d2', pb: 1, mb: 3 }}>
             Total:{' '}
             <Typography component="span" color="primary" fontWeight="bold">
               ${total.toFixed(2)}
             </Typography>
           </Typography>
 
-          <Typography
-            variant="subtitle1"
-            fontWeight="600"
-            sx={{ mb: 2, textAlign: { xs: 'center', md: 'left' } }}
-          >
+          <Typography variant="subtitle1" fontWeight="600" sx={{ mb: 2 }}>
             Delivery Fees
+            
           </Typography>
 
           {[
@@ -328,24 +296,41 @@ setCartItems(cartItems - 1);
                 {label}: ${price}
               </Typography>
             </Box>
+            
           ))}
 
-       
           {total > 100 && (
             <Typography variant="body2" sx={{ color: 'green', ml: 1, fontSize: 18 }}>
               Free delivery for orders above $100!
             </Typography>
           )}
+                    <Box  sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <img 
+            
+            
+  src="https://media.istockphoto.com/id/1435116123/fr/vectoriel/autocollant-de-vente-black-friday.jpg?s=612x612&w=0&k=20&c=sQalu70vJNp8zPnMcaqjsxfKaN-ROvsttQDoqWQrXXI="            height="200"
+            width="100%"
+            alt="حبتسهميتسمن" />
+          </Box>
         </Box>
 
         <Box sx={{ mt: 4, textAlign: 'center' }}>
-          <Button component={Link} to='/checkout' variant="contained" color="primary" size="large" fullWidth>
+          <Button component={Link} to="/checkout" variant="contained" color="primary" size="large" fullWidth>
             Checkout
           </Button>
+                <Button
+          sx={{ fontWeight: 'bold',mt:2 }}
+          onClick={clearCartHandler}
+          variant="contained"
+          color="error"
+          size="large"
+          fullWidth
+        >
+          Clear Cart
+        </Button>
         </Box>
       </Box>
 
-     
       <Dialog open={openConfirmDialog} onClose={() => setOpenConfirmDialog(false)}>
         <DialogTitle>Confirm Clear Cart</DialogTitle>
         <DialogContent>
@@ -370,6 +355,65 @@ setCartItems(cartItems - 1);
         </DialogActions>
       </Dialog>
     </Box>
+
+
+
+
+     <Ads /> 
+     <Box sx={{ borderBottom: '2px solid rgb(146, 146, 146)'}}> 
+
+     </Box>
+<Box
+  sx={{
+    mx: { xs: 2, md: 5 },
+    mt: 5,
+    display: 'flex',
+    flexDirection: { xs: 'column', sm: 'row' },
+    justifyContent: 'space-between',
+    alignItems: { xs: 'flex-start', sm: 'center' },
+    gap: 2,
+  }}
+>
+  <Typography
+    variant="h5"
+    fontWeight="bold"
+    sx={{
+      color: '#000',
+      ml: { xs: 0, sm: 5 },
+      pb: 1,
+    }}
+  >
+    <span style={{ borderBottom: '2px solid rgb(0, 0, 0)', paddingBottom: 4 }}>
+      Recommended for You
+    </span>
+  </Typography>
+
+  <Button
+    variant="contained"
+    component={Link}
+    to="/all-products"
+    
+    sx={{
+      color: 'white',
+      backgroundColor: '#1976d2',
+      textTransform: 'none',
+      fontWeight: 'bold',
+      borderRadius: 2,
+      px: 3,
+      ml: { xs: 0, sm: 5 },
+      fontSize: '1rem',
+      '&:hover': {
+        backgroundColor: '#115293',
+      },
+    }}
+  >
+    <span style={{ fontSize: '1.5rem', marginRight: 8 }}>👉</span>
+    Click to See More
+  </Button>
+</Box>
+
+<Products />
+     </Box>
   );
 }
 

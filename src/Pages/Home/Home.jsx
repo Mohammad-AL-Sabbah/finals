@@ -3,7 +3,7 @@ import Products from '../../Components/Products/Products'
 import { Box, Typography } from '@mui/material'
 import Category from '../../Components/Category/Category';
 import MyCarousel from "../../Components/Carousel/MyCarousel.jsx";
-import Ads from '../../Components/AdsGlopal.jsx/Ads';
+import Ads from '../../Components/AdsGlopal/Ads';
 import WelcomePopup from '../../Components/WelcomePopup/WelcomePopup.jsx';
 
 

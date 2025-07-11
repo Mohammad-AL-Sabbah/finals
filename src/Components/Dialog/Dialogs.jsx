@@ -78,10 +78,9 @@ export default function ProductDialog({ open, handleClose, product }) {
         }
       );
     } else {
-        toast(
+      toast(
         <div style={{ textAlign: 'center' }}>
           <div style={{ marginBottom: '0.5rem' , color:"red" }}>Something went wrong try add to cart </div>
-  
         </div>,
         {
           position: "top-center",
@@ -97,7 +96,6 @@ export default function ProductDialog({ open, handleClose, product }) {
     }
   };
 
-  const [userRating, setUserRating] = useState(product?.rating || 0);
   const [likedProducts, setLikedProducts] = useState([]);
   const handleLike = (id) => {
     setLikedProducts((prev) =>
@@ -277,25 +275,22 @@ export default function ProductDialog({ open, handleClose, product }) {
 
               <Typography variant="body2" mb={2}>
                 {product.description} <br />
-                <p style={{ color: '#388e3c', fontSize: '15px',fontWeight:"bold" }}>You can Zoom on the product </p>
+                <p style={{ color: '#388e3c', fontSize: '15px', fontWeight: "bold" }}>You can Zoom on the product </p>
               </Typography>
             </Box>
 
-        
-
-            <Box >
-              <Typography fontSize="14px">Avilable in stock: {product.quantity} Products</Typography>
+            <Box>
+              <Typography fontSize="14px">Available in stock: {product.quantity} Products</Typography>
             </Box>
 
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: '5px' }}>
-              <span>Rate this product</span>
+            {/* عرض التقييم الحالي بنجوم readonly */}
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: '5px', gap: 1 }}>
+              <Typography sx={{mb:1}}>Product Rate:</Typography>
               <Rating
-                value={userRating}
+                value={product.rate || 0}
                 precision={0.5}
-                onChange={(event, newValue) => {
-                  setUserRating(newValue);
-                }}
-                sx={{ ml: 1 }}
+                readOnly
+                size="small"
               />
             </Box>
 
