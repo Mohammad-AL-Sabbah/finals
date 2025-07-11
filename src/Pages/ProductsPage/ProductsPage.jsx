@@ -124,6 +124,8 @@ export default function ProductPage() {
   if (isError) return <p>Error: {error.message}</p>;
   if (isLoading) return <Loader />;
 
+  const title = document.getElementById('title');
+  if (title) title.innerHTML = data.name;
   return (
     <Box sx={{ p: 4, maxWidth: 1200, mx: 'auto', mt: 8 }}>
       <Box sx={{ display: 'flex', flexDirection: { xs: 'column-reverse', lg: 'row' }, gap: 4 }}>

@@ -32,7 +32,7 @@ function ProductById() {
 
   useEffect(() => {
     getProductById();
-    document.title = decodeURIComponent(name); // 🔥 العنوان
+    document.title = decodeURIComponent(name);
   }, [id, name]);
 
   const handleOpen = (product) => {

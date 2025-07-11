@@ -22,7 +22,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import GoogleIcon from '@mui/icons-material/Google';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import EmailIcon from '@mui/icons-material/Email';
-import { useMutation } from '@tanstack/react-query'; // ✅ الاستدعاء
+import { useMutation } from '@tanstack/react-query'; 
 
 function Register() {
   const { register, handleSubmit } = useForm();
@@ -33,7 +33,6 @@ function Register() {
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event) => event.preventDefault();
 
-  // ✅ mutation للتسجيل
   const registerMutation = useMutation({
     mutationFn: async (data) => {
       const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/Account/register`, data);
@@ -82,7 +81,7 @@ function Register() {
 
       <Box
         component="form"
-        onSubmit={handleSubmit((data) => registerMutation.mutate(data))} // ✅ استخدم useMutation هنا
+        onSubmit={handleSubmit((data) => registerMutation.mutate(data))} 
         sx={{
           flex: 1,
           display: 'flex',

@@ -13,9 +13,8 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  // Removed Button as it's no longer used for pagination buttons directly
   Pagination,
-  PaginationItem, // Import PaginationItem
+  PaginationItem,
 } from '@mui/material';
 import ShareIcon from '@mui/icons-material/Share';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -23,8 +22,8 @@ import { Heart } from 'react-feather';
 import ProductDetailsModal from '../../Components/Dialog/Dialogs';
 import {
   useNavigate,
-  useLocation, // Import useLocation
-  Link, // Import Link
+  useLocation, 
+  Link, 
 } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import Loader from '../../Components/Loader/Loader';

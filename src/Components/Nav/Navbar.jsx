@@ -19,7 +19,6 @@ function Navbar() {
   const navigate = useNavigate();
   const theme = useTheme();
 
-  // جلب بيانات السلة
   const fetchCartItems = async () => {
     const { data } = await AuthToken.get(`/Carts`);
     return data;

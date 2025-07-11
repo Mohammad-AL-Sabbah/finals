@@ -22,7 +22,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import GoogleIcon from '@mui/icons-material/Google';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import EmailIcon from '@mui/icons-material/Email';
-import { useMutation } from '@tanstack/react-query'; // ✅ استدعاء useMutation
+import { useMutation } from '@tanstack/react-query'; 
 
 import AuthToken from '../../Api/ApiAuthToken';
 
@@ -35,7 +35,6 @@ function Login() {
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event) => event.preventDefault();
 
-  // ✅ تحديث السلة بعد تسجيل الدخول
   const refreshCartItems = async () => {
     try {
       const { data } = await AuthToken.get('/Carts');
@@ -44,7 +43,6 @@ function Login() {
     }
   };
 
-  // ✅ mutation لتسجيل الدخول
   const loginMutation = useMutation({
     mutationFn: async (data) => {
       const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/Account/Login`, data);
@@ -90,7 +88,7 @@ function Login() {
       />
       <Box
         component="form"
-        onSubmit={handleSubmit((data) => loginMutation.mutate(data))} // ✅ استخدام mutation هنا
+        onSubmit={handleSubmit((data) => loginMutation.mutate(data))} 
         sx={{
           flex: 1,
           display: 'flex',
