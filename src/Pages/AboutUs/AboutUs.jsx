@@ -10,7 +10,8 @@ function AboutUs() {
     <Box sx={{height:'80%',width:'70%',display:'flex',justifyContent:'center',margin:'auto',flexDirection:'column',alignItems:'center',}}>
                     <Typography variant="h4" color="text.secondary" sx={{textAlign:'center',fontSize:'3rem',fontWeight:'bold',margin:'auto',width:'50%',mt:10}}>Comming Soon!</Typography>
   <DotLottieReact
-      src="public\About\Artificial Intelligence Chatbot.lottie"
+src="/About/Artificial Intelligence Chatbot.lottie"
+      
       loop
       autoplay
     />
