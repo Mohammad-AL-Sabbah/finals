@@ -14,9 +14,14 @@ function Home() {
   return (
     <>
     <WelcomePopup />
-    <MyCarousel />
+    <MyCarousel img1="/Carousel/sample-1.jpg" img2="/Carousel/sample-2.jpg" />
     <Category/>
-        <Ads />
+<Ads
+  padding="61px 40px"
+  bgcolor="#FFD35E"
+  borderRadius="12px"
+/>
+
 
      {/* فش منتجات بتكفي شغال هيك للتجربة */}
 <Typography
@@ -46,7 +51,7 @@ function Home() {
 
  <Products />  
     </Box>
-    <MyCarousel/>
+    <MyCarousel img1="/Carousel/sample-1.jpg"  img2="/Carousel/sample-2.jpg"/>
 
 </Box>
      {/* فش منتجات بتكفي شغال هيك للتجربة */}

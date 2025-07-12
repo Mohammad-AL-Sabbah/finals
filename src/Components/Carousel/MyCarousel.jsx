@@ -3,7 +3,8 @@ import Carousel from 'react-bootstrap/Carousel';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button } from '@mui/material';
 
-function MyCarousel() {
+function MyCarousel(props) {
+  console.log(props.img1);
   const [index, setIndex] = useState(0);
   const [fadeText, setFadeText] = useState(true);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
@@ -83,7 +84,7 @@ function MyCarousel() {
     fontWeight: '600',
     fontSize: screenWidth < 480 ? '0.9rem' : '1rem',
     cursor: 'pointer',
-    pointerEvents: 'auto', // للسماح بالضغط على الزر رغم أن الحاوية pointerEvents: none
+    pointerEvents: 'auto', 
     userSelect: 'none',
     transition: 'background-color 0.3s ease',
   };
@@ -163,7 +164,7 @@ function MyCarousel() {
           <Carousel.Item>
             <img
               className="d-block w-100"
-              src="/Carousel/sample-2.jpg"
+              src={props.img2}
               alt="الشريحة الأولى"
               style={imageStyle}
             />
@@ -172,7 +173,7 @@ function MyCarousel() {
           <Carousel.Item>
             <img
               className="d-block w-100"
-              src="/Carousel/sample-1.jpg"
+              src={props.img1}
               alt="الشريحة الثانية"
               style={imageStyle}
             />

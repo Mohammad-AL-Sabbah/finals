@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Box, Typography, Divider, Avatar, useTheme
+  Box, Typography, Divider, Avatar, useTheme, useMediaQuery
 } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import AuthToken from '../../Api/ApiAuthToken';
@@ -12,13 +12,13 @@ function fetchUser() {
 
 function Info() {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-const { data: user, isLoading, isError, error } = useQuery({
-  queryKey: ['userinfo'],
-  queryFn: fetchUser,
-    retry:3
-
-});
+  const { data: user, isLoading, isError, error } = useQuery({
+    queryKey: ['userinfo'],
+    queryFn: fetchUser,
+    retry: 3
+  });
 
   if (isLoading) {
     return (
@@ -51,7 +51,7 @@ const { data: user, isLoading, isError, error } = useQuery({
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
-      p: 2,
+      p: isMobile ? 1 : 2,
     }}>
       <Box sx={{
         width: '100%',
@@ -64,7 +64,6 @@ const { data: user, isLoading, isError, error } = useQuery({
         bgcolor: theme.palette.mode === 'dark' ? 'rgba(30,30,30,0.7)' : 'rgba(255,255,255,0.7)',
         backdropFilter: 'blur(10px)',
       }}>
-        {/* Banner */}
         <Box sx={{
           height: 160,
           background: theme.palette.mode === 'dark'
@@ -75,10 +74,10 @@ const { data: user, isLoading, isError, error } = useQuery({
           <Avatar
             src=""
             sx={{
-              width: 120,
-              height: 120,
+              width: 100,
+              height: 100,
               position: 'absolute',
-              bottom: -60,
+              bottom: -50,
               left: '50%',
               transform: 'translateX(-50%)',
               border: '4px solid white',
@@ -90,8 +89,8 @@ const { data: user, isLoading, isError, error } = useQuery({
           </Avatar>
         </Box>
 
-        <Box sx={{ pt: 8, pb: 4, px: 4, textAlign: 'center' }}>
-          <Typography variant="h4" fontWeight="bold">
+        <Box sx={{ pt: 7, pb: 4, px: isMobile ? 2 : 4, textAlign: 'center' }}>
+          <Typography variant="h5" fontWeight="bold">
             {user.firstName} {user.lastName}
           </Typography>
           <Typography variant="subtitle1" color="text.secondary">
@@ -102,9 +101,11 @@ const { data: user, isLoading, isError, error } = useQuery({
 
           <Box sx={{
             display: 'flex',
+            flexDirection: isMobile ? 'column' : 'row',
             flexWrap: 'wrap',
             justifyContent: 'center',
-            gap: 4
+            alignItems: 'center',
+            gap: 3
           }}>
             <InfoItem label="Email" value={user.email} />
             <InfoItem label="Gender" value={user.gender} />
@@ -115,7 +116,20 @@ const { data: user, isLoading, isError, error } = useQuery({
           </Box>
         </Box>
       </Box>
-      <Box sx={{ mt: 4, textAlign: 'left', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 10 }}>
+
+      <Box
+        sx={{
+          mt: 4,
+          textAlign: isMobile ? 'center' : 'left',
+          display: 'flex',
+          flexDirection: isMobile ? 'column' : 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: 3,
+          width: '100%',
+          maxWidth: 800,
+        }}
+      >
         <LabeledLine label="First Name" value={user.firstName} />
         <LabeledLine label="Last Name" value={user.lastName} />
         <LabeledLine label="Username" value={user.userName} />
@@ -126,7 +140,7 @@ const { data: user, isLoading, isError, error } = useQuery({
 
 function InfoItem({ label, value }) {
   return (
-    <Box sx={{ minWidth: 180 }}>
+    <Box sx={{ minWidth: 180, textAlign: 'center' }}>
       <Typography variant="body2" color="text.secondary">{label}</Typography>
       <Typography variant="body1" fontWeight={500}>{value}</Typography>
     </Box>
@@ -135,9 +149,23 @@ function InfoItem({ label, value }) {
 
 function LabeledLine({ label, value }) {
   return (
-    <Box sx={{ display: 'flex', gap: 1, mb: 1, border: '1px solid #1976d2', padding: 1, borderRadius: 2, justifyContent: 'center', alignItems: 'center', backgroundColor: '#1976d2' }}>
-      <Typography variant="body1" fontWeight="500" color="white">{label}:</Typography>
-      <Typography variant="body1" fontWeight="500" color="white">{value}</Typography>
+    <Box sx={{
+      display: 'flex',
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: 1,
+      mb: 1,
+      border: '1px solid #1976d2',
+      padding: 1,
+      borderRadius: 2,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: '#1976d2',
+      color: 'white',
+      minWidth: 200
+    }}>
+      <Typography variant="body1" fontWeight="500">{label}:</Typography>
+      <Typography variant="body1" fontWeight="500">{value}</Typography>
     </Box>
   );
 }

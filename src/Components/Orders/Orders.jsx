@@ -29,15 +29,15 @@ const fetchOrders = async () => {
 };
 
 function Orders() {
-const { data: orders, isLoading, error } = useQuery({
-  queryKey: ["orders"],
-  queryFn: fetchOrders,
-  retry:3
-});
+  const { data: orders, isLoading, error } = useQuery({
+    queryKey: ["orders"],
+    queryFn: fetchOrders,
+    retry: 3,
+  });
 
   const formatDate = (dateStr) => {
     if (!dateStr || dateStr.startsWith("0001")) return "-";
-    return new Date(dateStr).toLocaleDateString();
+    return new Date(dateStr).toLocaleDateString("en-GB"); 
   };
 
   const formatPrice = (price) => `${price.toLocaleString()} ₪`;
@@ -69,9 +69,6 @@ const { data: orders, isLoading, error } = useQuery({
         variant = "filled";
         break;
       default:
-        icon = null;
-        color = "default";
-        variant = "outlined";
         break;
     }
 
@@ -82,6 +79,7 @@ const { data: orders, isLoading, error } = useQuery({
         color={color}
         variant={variant}
         size="small"
+        sx={{ whiteSpace: "nowrap" }}
       />
     );
   };
@@ -109,7 +107,7 @@ const { data: orders, isLoading, error } = useQuery({
         width: "100%",
         minHeight: "100vh",
         bgcolor: "#f4f6f8",
-        px: { xs: 2, md: 6 },
+        px: { xs: 1, md: 6 },
         py: 4,
         display: "flex",
         justifyContent: "center",
@@ -126,95 +124,136 @@ const { data: orders, isLoading, error } = useQuery({
           Orders Overview
         </Typography>
 
-        <TableContainer
-          component={Paper}
-          sx={{
-            borderRadius: 2,
-            backgroundColor: "#ffffff",
-            border: "1px solid #e0e0e0",
-          }}
-        >
-          <Table>
-            <TableHead sx={{ backgroundColor: "#f8f9fa" }}>
-              <TableRow>
-                <TableCell align="center">#</TableCell>
-                <TableCell align="center">Order ID</TableCell>
-                <TableCell align="center">
-                  <CalendarMonthIcon
-                    fontSize="small"
-                    sx={{ mr: 0.5, verticalAlign: "middle" }}
-                  />{" "}
-                  Order Date
-                </TableCell>
-                <TableCell align="center">Status</TableCell>
-                <TableCell align="center">
-                  <CreditCardIcon
-                    fontSize="small"
-                    sx={{ mr: 0.5, verticalAlign: "middle" }}
-                  />{" "}
-                  Payment
-                </TableCell>
-                <TableCell align="center">Total</TableCell>
-                <TableCell align="center">
-                  <LocalShippingIcon
-                    fontSize="small"
-                    sx={{ mr: 0.5, verticalAlign: "middle" }}
-                  />{" "}
-                  Carrier
-                </TableCell>
-                <TableCell align="center">
-                  <TravelExploreIcon
-                    fontSize="small"
-                    sx={{ mr: 0.5, verticalAlign: "middle" }}
-                  />{" "}
-                  Tracking
-                </TableCell>
-                <TableCell align="center">
-                  <CalendarMonthIcon
-                    fontSize="small"
-                    sx={{ mr: 0.5, verticalAlign: "middle" }}
-                  />{" "}
-                  Shipped
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {orders.map((order, index) => (
-                <TableRow
-                  key={order.id}
-                  sx={{
-                    "&:hover": {
-                      backgroundColor: "#f5f5f5",
-                      transition: "0.2s",
-                    },
-                  }}
-                >
-                  <TableCell align="center">{index + 1}</TableCell>
-                  <TableCell align="center">{order.id}</TableCell>
-                  <TableCell align="center">{formatDate(order.orderDate)}</TableCell>
-                  <TableCell align="center">{getStatusChip(order.orderStatus)}</TableCell>
-                  <TableCell align="center">{order.paymentMethodType || "-"}</TableCell>
-                  <TableCell align="center">{formatPrice(order.totalPrice)}</TableCell>
+        <Box sx={{ overflowX: "auto" }}>
+          <TableContainer
+            component={Paper}
+            sx={{
+              borderRadius: 2,
+              backgroundColor: "#ffffff",
+              border: "1px solid #e0e0e0",
+              minWidth: "800px",
+            }}
+          >
+            <Table>
+              <TableHead sx={{ backgroundColor: "#f8f9fa" }}>
+                <TableRow>
+                  <TableCell align="center">#</TableCell>
+                  <TableCell align="center">Order ID</TableCell>
                   <TableCell align="center">
-                    {order.carrier ? (
-                      order.carrier
-                    ) : (
-                      <Chip label="No Carrier" variant="outlined" size="small" color="default" />
-                    )}
+                    <CalendarMonthIcon
+                      fontSize="small"
+                      sx={{ mr: 0.5, verticalAlign: "middle" }}
+                    />{" "}
+                    Order Date
                   </TableCell>
+                  <TableCell align="center">Status</TableCell>
                   <TableCell align="center">
-                    {order.trackingNumber ? (
-                      order.trackingNumber
-                    ) : (
-                      <Chip label="No Tracking" variant="outlined" size="small" color="default" />
-                    )}
+                    <CreditCardIcon
+                      fontSize="small"
+                      sx={{ mr: 0.5, verticalAlign: "middle" }}
+                    />{" "}
+                    Payment
                   </TableCell>
-                  <TableCell align="center">{formatDate(order.shippedDate)}</TableCell>
+                  <TableCell align="center">Total</TableCell>
+                  <TableCell
+                    align="center"
+                    sx={{ display: { xs: "none", sm: "table-cell" } }}
+                  >
+                    <LocalShippingIcon
+                      fontSize="small"
+                      sx={{ mr: 0.5, verticalAlign: "middle" }}
+                    />{" "}
+                    Carrier
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    sx={{ display: { xs: "none", sm: "table-cell" } }}
+                  >
+                    <TravelExploreIcon
+                      fontSize="small"
+                      sx={{ mr: 0.5, verticalAlign: "middle" }}
+                    />{" "}
+                    Tracking
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    sx={{ display: { xs: "none", sm: "table-cell" } }}
+                  >
+                    <CalendarMonthIcon
+                      fontSize="small"
+                      sx={{ mr: 0.5, verticalAlign: "middle" }}
+                    />{" "}
+                    Shipped
+                  </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {orders.map((order, index) => (
+                  <TableRow
+                    key={order.id}
+                    sx={{
+                      "&:hover": {
+                        backgroundColor: "#f5f5f5",
+                        transition: "0.2s",
+                      },
+                    }}
+                  >
+                    <TableCell align="center">{index + 1}</TableCell>
+                    <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
+                      {order.id}
+                    </TableCell>
+                    <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
+                      {formatDate(order.orderDate)}
+                    </TableCell>
+                    <TableCell align="center">{getStatusChip(order.orderStatus)}</TableCell>
+                    <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
+                      {order.paymentMethodType || "-"}
+                    </TableCell>
+                    <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
+                      {formatPrice(order.totalPrice)}
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{ display: { xs: "none", sm: "table-cell" }, whiteSpace: "nowrap" }}
+                    >
+                      {order.carrier ? (
+                        order.carrier
+                      ) : (
+                        <Chip
+                          label="No Carrier"
+                          variant="outlined"
+                          size="small"
+                          color="default"
+                        />
+                      )}
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{ display: { xs: "none", sm: "table-cell" }, whiteSpace: "nowrap" }}
+                    >
+                      {order.trackingNumber ? (
+                        order.trackingNumber
+                      ) : (
+                        <Chip
+                          label="No Tracking"
+                          variant="outlined"
+                          size="small"
+                          color="default"
+                        />
+                      )}
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{ display: { xs: "none", sm: "table-cell" }, whiteSpace: "nowrap" }}
+                    >
+                      {formatDate(order.shippedDate)}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
       </Box>
     </Box>
   );

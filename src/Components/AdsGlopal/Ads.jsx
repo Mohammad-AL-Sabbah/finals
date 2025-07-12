@@ -19,7 +19,7 @@ const adsData = [
   },
 ];
 
-const Ads = () => {
+const Ads = (props) => {
   return (
     <Box
       sx={{
@@ -31,6 +31,12 @@ const Ads = () => {
         flexWrap: "wrap",
         justifyContent: "space-evenly",
         gap: 2,
+        padding: props.padding ,
+        background: props.bgcolor,
+        borderRadius: props.borderRadius ,
+        color: "white", 
+        textAlign: "center",
+        fontSize: "1.2rem",
       }}
     >
       {adsData.map((ad, index) => (
