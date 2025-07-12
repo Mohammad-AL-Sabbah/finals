@@ -45,7 +45,7 @@ const Ads = () => {
             cursor: "pointer",
           }}
         >
-          {/* الصورة نفسها */}
+    
           <Box
             component="img"
             src={ad.image}
@@ -61,7 +61,7 @@ const Ads = () => {
             }}
           />
 
-          {/* النصوص فوق الصورة - جهة اليمين */}
+
           <Box
             sx={{
               position: "absolute",
@@ -73,7 +73,7 @@ const Ads = () => {
               flexWrap: "wrap",
               flexDirection: "column",
               justifyContent: "space-between",
-              alignItems: "flex-end", // للنص على اليمين
+              alignItems: "flex-end", 
               color: "white",
               textAlign: "right",
               padding: "15px",
