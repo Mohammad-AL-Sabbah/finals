@@ -4,6 +4,7 @@ import { Box, Typography } from '@mui/material'
 import Category from '../../Components/Category/Category';
 import MyCarousel from "../../Components/Carousel/MyCarousel.jsx";
 import Ads from '../../Components/AdsGlopal/Ads';
+import Banner from '../../Components/Banner/Banner';
 import WelcomePopup from '../../Components/WelcomePopup/WelcomePopup.jsx';
 
 
@@ -85,8 +86,24 @@ function Home() {
 
     </Box>
 </Box>
-        <Ads />
+   <Box
+      sx={{
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        '@media (max-width: 600px)': {
+          flexDirection: 'column',
+        },
+      }}
+    >
+      <Banner url='https://global.hisense.com/dam/jcr:fbff4c8d-c3b4-45f9-8da9-cd6885d27ea0/og-image-H605G.jpg' />
+      <Banner url='https://t4.ftcdn.net/jpg/06/40/64/53/360_F_640645306_ADDT2XPJVYKhd1tIkqZF2vK1MZX4aSb3.jpg' />
+    </Box>
 
+        <Ads />
     </>
 
   )
