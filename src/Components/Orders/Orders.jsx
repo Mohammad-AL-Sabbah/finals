@@ -40,7 +40,7 @@ function Orders() {
     return new Date(dateStr).toLocaleDateString("en-GB"); 
   };
 
-  const formatPrice = (price) => `${price.toLocaleString()} ₪`;
+  const formatPrice = (price) => `${price.toLocaleString()} $`;
 
   const getStatusChip = (status) => {
     if (!status) return null;
