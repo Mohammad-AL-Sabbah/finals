@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react'; // Import useEffect for initial page load
+import React, { useState, useMemo, useEffect } from 'react'; 
 import axios from 'axios';
 import {
   Box,

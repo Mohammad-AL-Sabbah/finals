@@ -9,7 +9,6 @@ import {
   FormControlLabel,
   Card,
   CardContent,
-  CardActionArea,
   Pagination,
 } from '@mui/material';
 import axios from 'axios';
@@ -27,6 +26,7 @@ export default function ProductPage() {
   const { id } = useParams();
   const queryClient = useQueryClient();
 
+  // eslint-disable-next-line no-unused-vars
   const [quantity, setQuantity] = useState(1);
   const [shipping, setShipping] = useState('10');
 

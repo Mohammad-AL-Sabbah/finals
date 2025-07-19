@@ -23,13 +23,14 @@ import GoogleIcon from '@mui/icons-material/Google';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import EmailIcon from '@mui/icons-material/Email';
 import { useMutation } from '@tanstack/react-query'; 
-
 import AuthToken from '../../Api/ApiAuthToken';
+import { Loader } from 'react-feather';
 
 function Login() {
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
   const theme = useTheme();
+  const [Loading, setLoading] = React.useState(false);
 
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -38,13 +39,17 @@ function Login() {
   const refreshCartItems = async () => {
     try {
       const { data } = await AuthToken.get('/Carts');
+    
     } catch (error) {
       console.error('Failed to refresh cart items:', error);
     }
   };
 
+  const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
   const loginMutation = useMutation({
     mutationFn: async (data) => {
+      setLoading(true);
       const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/Account/Login`, data);
       localStorage.setItem('Usertoken', response.data.token);
       return response;
@@ -52,14 +57,15 @@ function Login() {
     onSuccess: async (response) => {
       if (response.status === 200) {
         toast.success('Login successful!', {
-          autoClose: 2000,
+          autoClose: 1000,
           position: 'top-center',
           theme: 'colored',
         });
 
-        await refreshCartItems();
-
-        setTimeout(() => navigate('/', { replace: true }), 2000);
+        await delay(1000);        
+        await refreshCartItems(); 
+        setLoading(false);
+        navigate('/', { replace: true });
       }
     },
     onError: () => {
@@ -68,6 +74,7 @@ function Login() {
         position: 'top-center',
         theme: 'colored',
       });
+      setLoading(false);
     },
   });
 
@@ -88,7 +95,7 @@ function Login() {
       />
       <Box
         component="form"
-        onSubmit={handleSubmit((data) => loginMutation.mutate(data))} 
+        onSubmit={handleSubmit((data) => loginMutation.mutate(data))}
         sx={{
           flex: 1,
           display: 'flex',
@@ -141,8 +148,8 @@ function Login() {
           </Link>
         </Box>
 
-        <Button type='submit' variant='contained' fullWidth sx={{ maxWidth: 400, mt: 1 }}>
-          Login
+        <Button type='submit' disabled={Loading} variant='contained' fullWidth sx={{ maxWidth: 400, mt: 1 }}>
+          {Loading ? <Loader /> : `login`}
         </Button>
 
         <Box sx={{ textAlign: 'center', mt: 2 }}>
