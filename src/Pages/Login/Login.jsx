@@ -27,7 +27,7 @@ import AuthToken from '../../Api/ApiAuthToken';
 import { Loader } from 'react-feather';
 
 function Login() {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit,formState: { errors  }} = useForm();
   const navigate = useNavigate();
   const theme = useTheme();
   const [Loading, setLoading] = React.useState(false);
@@ -123,12 +123,26 @@ function Login() {
           <Divider><Typography variant='caption'>or</Typography></Divider>
         </Box>
 
-        <TextField {...register('email')} label='Email' type='email' required fullWidth sx={{ maxWidth: 400 }} />
+       
 
-        <FormControl fullWidth variant="outlined" required sx={{ maxWidth: 400 }}>
-          <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+        <FormControl fullWidth variant="outlined"  sx={{ maxWidth: 400 }}>
+          <InputLabel htmlFor="outlined-adornment-password">Email <span style={{ color: 'red' }}>*</span></InputLabel>
           <OutlinedInput
-            {...register('password')}
+          
+            {...register('email', {required:"email is required"})}
+              label="Email *"
+
+          />
+        </FormControl>
+        {errors.email?<p style={{color:'red'}}>{errors.email.message} </p>  :null }
+
+
+
+
+        <FormControl fullWidth variant="outlined"  sx={{ maxWidth: 400 }}>
+          <InputLabel htmlFor="outlined-adornment-password">Password <span style={{ color: 'red' }}>*</span></InputLabel>
+          <OutlinedInput
+            {...register('password', {required:"password is required"})}
             id="outlined-adornment-password"
             type={showPassword ? 'text' : 'password'}
             endAdornment={
@@ -141,6 +155,7 @@ function Login() {
             label="Password"
           />
         </FormControl>
+        {errors.password?<p style={{color:'red'}}>{errors.password.message} </p>  :null }
 
         <Box sx={{ width: '100%', maxWidth: 400, textAlign: 'right' }}>
           <Link to="/forget-password" style={{ fontSize: '0.85rem', textDecoration: 'underline', color: theme.palette.primary.main }}>
