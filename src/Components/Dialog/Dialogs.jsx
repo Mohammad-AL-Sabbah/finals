@@ -11,7 +11,6 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ShareIcon from '@mui/icons-material/Share';
-
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import { useTheme } from '@mui/material/styles';
 import { Heart } from 'react-feather';
@@ -63,7 +62,7 @@ export default function ProductDialog({ open, handleClose, product }) {
               fontSize: '0.8rem',
             }}
           >
-            press to Login
+            Press to Login
           </Button>
         </div>,
         {
@@ -79,8 +78,8 @@ export default function ProductDialog({ open, handleClose, product }) {
       );
     } else {
       toast(
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ marginBottom: '0.5rem' , color:"red" }}>Something went wrong try add to cart </div>
+        <div style={{ textAlign: 'center', color: "red" }}>
+          Something went wrong, try adding to cart
         </div>,
         {
           position: "top-center",
@@ -141,7 +140,6 @@ export default function ProductDialog({ open, handleClose, product }) {
 
   return (
     <>
-      <ToastContainer />
       <Dialog
         open={open}
         onClose={handleClose}
@@ -194,6 +192,7 @@ export default function ProductDialog({ open, handleClose, product }) {
             height: 'auto',
           }}
         >
+          {/* Image and Zoom */}
           <Box
             sx={{
               flex: 1,
@@ -244,6 +243,7 @@ export default function ProductDialog({ open, handleClose, product }) {
             )}
           </Box>
 
+          {/* Product Details */}
           <Box
             sx={{
               flex: 1,
@@ -283,9 +283,8 @@ export default function ProductDialog({ open, handleClose, product }) {
               <Typography fontSize="14px">Available in stock: {product.quantity} Products</Typography>
             </Box>
 
-            {/* عرض التقييم الحالي بنجوم readonly */}
             <Box sx={{ display: 'flex', alignItems: 'center', mb: '5px', gap: 1 }}>
-              <Typography sx={{mb:1}}>Product Rate:</Typography>
+              <Typography sx={{ mb: 1 }}>Product Rate:</Typography>
               <Rating
                 value={product.rate || 0}
                 precision={0.5}
@@ -294,13 +293,13 @@ export default function ProductDialog({ open, handleClose, product }) {
               />
             </Box>
 
-            <Typography variant="h5" fontWeight="bold" color="black" >
+            <Typography variant="h5" fontWeight="bold" color="black">
               Price is : {product.price}$
             </Typography>
 
+            {/* Buttons */}
             <Box mt={1} mb={1} display="flex" gap={2} flexWrap="wrap">
               <AddToCart product={product} />
-
               <Button
                 variant="contained"
                 onClick={handleBuyNow}
